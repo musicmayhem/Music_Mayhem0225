@@ -1,0 +1,5 @@
+json.account (@account)
+json.solo_player (@solo_player)
+json.playlist (@playlist)
+json.game (@game)
+json.rounds (@rounds)

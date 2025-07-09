@@ -1,0 +1,2 @@
+$('.flashes').remove();
+$('.title_bar').after($('<%= raw(flash_notification("Added Song to Current Playlist: #{link_to @playlist.name, [:admin, @playlist]}")) %>'));

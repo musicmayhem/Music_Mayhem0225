@@ -1,0 +1,3 @@
+$('.flashes').remove();
+$('.title_bar').after($('<%= raw(flash_notification("Current Playlist cleared!")) %>'));
+$('.current-playlist-info').html('<%= escape_javascript(render "admin/playlists/current_playlist") %>')

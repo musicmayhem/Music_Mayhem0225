@@ -1,0 +1,2 @@
+class ScoreTable < ApplicationRecord
+end

@@ -1,0 +1,14 @@
+.current-playlist-container{:style => "float: right; margin: 10px; position: relative; top: -3rem; margin-bottom: -2rem"}
+  %span.set-current-playlist-btn
+    .dropdown_menu
+      %a.dropdown_menu_button.pagination-form= "#{params[:pagination]} Records per page "
+      .dropdown_menu_list_wrapper{:style => "left: 23.5px; top: 171px; display: none;"}
+        %ul.dropdown_menu_list
+          %li
+            %a{:href => "/admin/#{resource}?pagination=10"}  10 Records
+          %li
+            %a{:href => "/admin/#{resource}?pagination=50"}  50 Records
+          %li
+            %a{:href => "/admin/#{resource}?pagination=100"} 100 Records
+          %li
+            %a{:href => "/admin/#{resource}?pagination=200"} 200 Records

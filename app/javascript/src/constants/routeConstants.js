@@ -1,0 +1,7 @@
+export const GETTING_DATA = 'games/GETTING_DATA'
+export const PATCHING = 'games/PATCHING'
+export const PATCHED = 'games/PATCHED'
+export const PATCH_FAILED = 'games/PATCH_FAILED'
+export const POST_FAILED = 'games/POST_FAILED'
+export const POSTING = 'games/POSTING'
+export const GETTING_FAILED = 'games/GETTING_FAILED'

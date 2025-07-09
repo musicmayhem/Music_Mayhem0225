@@ -1,0 +1,8 @@
+json.current_account_logo (current_account&.logo&.url)
+json.username (current_account&.username)
+json.total_points (@total_points)
+json.games_won (current_account&.games_won)
+json.avg_points (@avg_points)
+json.played_games (@played_games)
+json.plan (@plan)
+json.muted (@muted)

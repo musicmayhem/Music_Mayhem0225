@@ -1,0 +1,8 @@
+export const PLAN_NAMES =
+[{plan_name: 'Personal-Monthly $2 per month', plan_desc: 'You have the additional ability to create games for up to 10 people with weekly updated playlists', plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg', value: 'mmpersonal1'},
+	{plan_name: 'Personal - Annual $20 per year', plan_desc: 'You have the ability to create games for up to 10 people with access to over 2,500 songs and playlist control.',plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg', value: 'MMPersonal2'},
+	{plan_name: 'Professional Pass - $200/year', plan_desc: 'You have the ability to create games for up to 100 people with access to over 10,000 songs and the ability to create custom playlists.',plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg', value: 'MMOrg1'},
+	{plan_name: 'Organization - Annual $19,999 per year', plan_desc: 'You have the ability to create games for up to 100 people with access to over 10,000 songs and the ability to create custom playlists.', plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg', value: 'MMOrg2'},
+	{plan_name: 'One time Party plan, $20 (24 hours)', plan_desc: 'You have the 24 hours with the ability to create games for up to 10 people with access to all playlists', plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg',  value: 'party'},
+	{plan_name: 'Basic Plan - FREE', plan_desc: 'You have the ability to play at a Venue or Solo Mode and track your career.', plan_img: 'https://s3.us-east-2.amazonaws.com/react-app-images/icon_subscription.svg', value: 'freeplan'}
+]

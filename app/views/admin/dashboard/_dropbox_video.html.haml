@@ -1,0 +1,5 @@
+-if current_admin_user.linked_to_dropbox?
+  =button_to('Sync Dropbox Video', video_sync_admin_admin_user_path(current_admin_user), method: :post, remote: true, data: { disable_with: "Syncing......." } )
+  - if current_admin_user.video_sync_time?
+    Last synced at:
+    = time_ago_in_words(current_admin_user.video_sync_time) + ' ago'

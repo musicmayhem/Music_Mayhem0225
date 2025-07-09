@@ -1,0 +1,1 @@
+json.game_exist (@game_exist)

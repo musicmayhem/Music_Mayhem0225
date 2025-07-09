@@ -1,0 +1,6 @@
+-if session[:current_playlist].present? && @current_playlist = Playlist.find(session[:current_playlist])
+  %span
+    Current Playlist:
+    =link_to @current_playlist.name, admin_playlist_path( @current_playlist )
+  %span.clear-current-playlist
+    = link_to 'Clear', destroy_current_playlist_admin_playlists_path, :method => :delete, :remote => true, :class => 'table_tools_button'

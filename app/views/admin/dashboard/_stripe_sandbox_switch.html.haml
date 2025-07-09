@@ -1,0 +1,8 @@
+-if AdminUser.first.enabled_stripe_test
+  %p
+    %strong Test Mode Active
+  =button_to('Switch To Production Mode', admin_stripe_sandbox_switch_path, method: :patch, disable_with: "Switching..." )
+-else
+  %p
+    %strong Production Mode Active
+  =button_to('Switch To Test Mode', admin_stripe_sandbox_switch_path, method: :patch, disable_with: "Switching..." )

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Mayhem - Music Trivia | Music Mayhem Game</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+
+  <%= yield :head %>
+
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/icon.png" type="image/png">
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icon.png">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300" rel="stylesheet" />
+  <script src="//js.pusher.com/3.1/pusher.min.js"></script>
+  <meta content="9f2639a1132265d662e5" name="pusher-key" />
+  <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+  <%= javascript_importmap_tags %>
+  <%= vite_client_tag %>
+  <%= vite_javascript_tag 'index.jsx' %>
+  <!--
+      If using a TypeScript entrypoint file:
+        vite_typescript_tag 'application'
+
+      If using a .jsx or .tsx entrypoint, add the extension:
+        vite_javascript_tag 'application.jsx'
+
+      Visit the guide for more information: https://vite-ruby.netlify.app/guide/rails
+    -->
+
+</head>
+
+<body>
+  <%= yield %>
+</body>
+
+</html>

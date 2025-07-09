@@ -1,0 +1,245 @@
+@import 'activeadmin_addons/all';
+// Sass variable overrides must be declared before loading up Active Admin's styles.
+//
+// To view the variables that Active Admin provides, take a look at
+// `app/assets/stylesheets/active_admin/mixins/_variables.scss` in the
+// Active Admin source.
+//
+// For example, to change the sidebar width:
+// $sidebar-width: 242px;
+
+// Active Admin's got SASS!
+@import "active_admin/mixins";
+@import "active_admin/base";
+
+// Overriding any non-variable Sass must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   .status_tag { background: #6090DB; }
+
+// SASS variable overrides must be declared before loading up Active Admin's styles.
+//
+// To view the variables that Active Admin provides, take a look at
+// `app/assets/stylesheets/active_admin/mixins/_variables.scss` in the
+// Active Admin source.
+//
+// For example, to change the sidebar width:
+// $sidebar-width: 242px;
+
+// Active Admin's got SASS!
+// @import "active_admin/mixins";
+// @import "active_admin/base";
+// @import "flattened_active_admin/variables";
+// @import "flattened_active_admin/mixins";
+// @import "flattened_active_admin/base";
+// @import "active_admin/mixins";
+// @import "active_admin/base";
+// @import "flattened_active_admin/active_admin_numeric_range";
+// @import "jquery.modal";
+// @import "buttons";
+
+
+#dialog_confirm input{
+  float: left;
+  margin-right: 1rem;
+}
+
+
+// Overriding any non-variable SASS must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   .status_tag { background: #6090DB; }
+
+// SASS variable overrides must be declared before loading up Active Admin's styles.
+//
+// To view the variables that Active Admin provides, take a look at
+// `app/assets/stylesheets/active_admin/mixins/_variables.css.scss` in the
+// Active Admin source.
+//
+// For example, to change the sidebar width:
+// $sidebar-width: 242px;
+
+// Active Admin's got SASS!
+//= require select2
+//=# require songs
+//= require activeadmin-sortable
+
+// Overriding any non-variable SASS must be done after the fact.
+// For example, to change the default status-tag color:
+//
+//   .status_tag { background: #6090DB; }
+//
+.select2-container{
+  width: 80%;
+}
+#sidebar{
+  .select2-container{
+    width: 100%;
+  }
+}
+.index .current-playlist-container{
+  margin-bottom: 1em;
+  float: right;
+  margin-top: -3em;
+}
+body:not(.index) .set-current-playlist-btn{
+  display: block;
+  margin-top: 1em;
+  text-align: right;
+}
+
+.dropdown_menu .dropdown_menu_button.pagination-form{
+  font-size: 11px;
+  padding: 4px 16px;
+  margin-left: 10px;
+}
+
+.admin-song-title-form, .admin-song-artist-form, .admin-song-year-form {
+  display: none;
+}
+
+.admin-song-title-form, .admin-song-artist-form, .admin-song-year-form, .admin-song-genres-form {
+  i{
+    font-size: 2em;
+  }
+  .fa-check {
+    color: green;
+    cursor: pointer;
+  }
+  .fa-times {
+    color:red;
+    cursor: pointer;
+  }
+}
+
+.admin-song-artist-section, .admin-song-year-section {
+  min-height: 1.5em;
+}
+
+
+.admin-song-title, .admin-song-artist, .admin-song-year, .admin-song-genres{
+  cursor: pointer;
+  i{
+    float:right;
+    font-size: 1em;
+    display:none;
+  }
+}
+.admin-song-title:hover, .admin-song-artist:hover, .admin-song-year:hover, .admin-song-genres:hover{
+  i{
+    display:block;
+  }
+}
+
+.admin-song-genres-form {
+  margin-top: 2em;
+  .admin-update-button-genres {
+    display: block;
+    margin-top: 2em;
+  }
+}
+.dropdown_menu_list_wrapper{
+  z-index: 2;
+}
+.modal {
+    margin-top: 10em;
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 5; /* Sit on top */
+    padding-top: 150px; /* Location of the box */
+    left: 0;
+    top: -10em;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    height: 25em;
+    overflow-y: auto;
+    .song_double_custom_data_1, .song_question_answer_pairs_1{
+      width: 37%;
+      margin-right: 1.4em;
+    }
+    .song_double_custom_data_2, .song_question_answer_pairs_2{
+      width: 37%
+    }
+    label{
+      font-weight: bolder;
+    }
+    input{
+      margin-bottom: 2em;
+    }
+}
+
+/* The Close Button */
+.close {
+    color: #aaaaaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal .mm-button{
+  font-weight: bold;
+  text-decoration: none;
+  color: #fff;
+  margin: 2em;
+}
+.modal .archive-button, .active-button{
+  display: inline;
+}
+
+.scroll-table{
+  height: 40em;
+  overflow: auto;
+  position: relative;
+}
+
+#dialog_confirm {
+  input {
+    float: left;
+  }
+  label {
+    margin-left: 1em;
+  }
+}
+
+.grey-links {
+  text-decoration : none !important;
+  color : #3e4142 !important;
+}
+
+.add-field-expanded-data, .add-field-expanded-double-data, .add-field-expanded-question-data  {
+  display: block;
+}
+
+.block-input-field {
+  display: block;
+}
+
+.modal {
+  .submit-custom-data, .submit-custom-double-data, .submit-custom-question-data{
+    margin-top: 1em !important;
+  }
+  .remove-expanded-song-field, .remove-expanded-double-song-field {
+    cursor: pointer;
+  }
+}
+
+// Place all the styles related to the playlists controller here.

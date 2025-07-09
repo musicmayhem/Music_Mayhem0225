@@ -1,0 +1,46 @@
+{
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@activeadmin/activeadmin": "^3.3.0",
+    "axios": "^0.18.0",
+    "bootstrap": "^4.1.1",
+    "lodash": "^4.17.10",
+    "mobile-detect": "^1.4.3",
+    "prop-types": "^15.6.1",
+    "react": "^16.14.0",
+    "react-adsense": "^0.1.0",
+    "react-circular-progressbar": "^1.0.0",
+    "react-countdown": "^2.2.1",
+    "react-countup": "^4.2.2",
+    "react-dom": "^16.4.0",
+    "react-flexbox-grid": "^2.1.0",
+    "react-ga": "^2.5.3",
+    "react-html-parser": "^2.0.2",
+    "react-player": "^1.15.3",
+    "react-redux": "^5.0.7",
+    "react-responsive-modal": "^3.2.0",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "react-router-redux": "^4.0.8",
+    "react-toastify": "^5.1.0",
+    "react_ujs": "2.4.4",
+    "reactstrap": "^6.0.1",
+    "redux": "^4.0.0",
+    "redux-form": "^7.3.0",
+    "redux-thunk": "^2.2.0",
+    "sortablejs": "^1.10.2",
+    "superagent": "^3.8.3",
+    "sweetalert2": "^7.26.28"
+  },
+  "devDependencies": {
+    "@types/react": "^16",
+    "@types/react-dom": "^16",
+    "vite": "^5.4.19",
+    "vite-plugin-ruby": "^5.1.1"
+  },
+  "scripts": {
+    "dev": "bin/vite dev"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}

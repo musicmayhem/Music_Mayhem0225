@@ -1,0 +1,6 @@
+-if session[:current_account].present? && @current_account = Account.find(session[:current_account])
+  %span
+    Current Account:
+    =link_to @current_account.name, admin_account_path( @current_account )
+  %span.clear-current-playlist
+    = link_to 'Clear', destroy_current_account_admin_accounts_path, :method => :delete, :remote => true, :class => 'table_tools_button'

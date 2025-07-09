@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="128px" height="48px" viewBox="0 0 128 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Buton</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Full-Set-Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0.0" transform="translate(-96.000000, -242.000000)">
+            <g id="CTA" transform="translate(24.000000, 150.000000)">
+                <g id="Buton" transform="translate(72.000000, 92.000000)">
+                    <rect id="Rectangle-3" fill="#1EB2E4" x="0" y="0" width="128" height="48" rx="8"></rect>
+                    <text id="Join-Game" font-family="OpenSans-Semibold, Open Sans" font-size="15" font-weight="500" fill="#FFFFFF">
+                        <tspan x="24.2331543" y="30">JOIN GAME</tspan>
+                    </text>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

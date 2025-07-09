@@ -1,0 +1,7 @@
+#current-playlist-form.current-playlist-modal{style: 'display: none'}
+  %h2
+    Select Current Playlist
+  %p
+  =form_tag current_playlist_admin_playlists_path, method: :post, remote: true do
+    =select_tag "id", options_from_collection_for_select(Playlist.all, "id", "name"), prompt: "Select Playlist"
+    =submit_tag 'Set Current Playlist'

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="130px" height="38px" viewBox="0 0 130 38" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>btn_twitter</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Full-Set-Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="0.1-Register" transform="translate(-166.000000, -433.000000)">
+            <g id="btn_twitter" transform="translate(166.000000, 433.000000)">
+                <rect id="Rectangle-3" fill="#1DA1F2" x="0" y="0" width="130" height="38" rx="8"></rect>
+                <text id="Join-With" font-family="OpenSans-Semibold, Open Sans" font-size="12" font-weight="500" fill="#FFFFFF">
+                    <tspan x="22" y="24">JOIN WITH</tspan>
+                </text>
+                <text id="" font-family="FontAwesome" font-size="18" font-weight="normal" letter-spacing="0.24000001" fill="#FFFFFF">
+                    <tspan x="93.0228571" y="25"></tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

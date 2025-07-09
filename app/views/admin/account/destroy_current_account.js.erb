@@ -1,0 +1,3 @@
+$('.flashes').remove();
+$('.title_bar').after($('<%= raw(flash_notification("Current Account Cleared!")) %>'));
+$('.current-playlist-info').html('<%= escape_javascript(render "admin/accounts/current_account") %>')

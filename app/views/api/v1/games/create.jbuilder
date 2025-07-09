@@ -1,0 +1,6 @@
+json.game (@game)
+json.games (current_account&.games&.last_ten_games)
+json.songs_url (@songs_url)
+json.round (@rounds)
+json.game_id (@game_id)
+json.state (@game.state)

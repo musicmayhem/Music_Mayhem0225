@@ -1,0 +1,1 @@
+json.mail_response (@mail_response)

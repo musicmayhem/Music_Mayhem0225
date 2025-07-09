@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="272px" height="48px" viewBox="0 0 272 48" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Buton Host</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Full-Set-Mobile" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="1.0-Dashboard" transform="translate(-24.000000, -706.000000)">
+            <g id="Buton-Host" transform="translate(24.000000, 706.000000)">
+                <rect id="Rectangle-3" fill="#FFCA27" x="0" y="0" width="272" height="48" rx="8"></rect>
+                <text id="Play-Solo-Game" font-family="OpenSans-Semibold, Open Sans" font-size="15" font-weight="500" fill="#FFFFFF">
+                    <tspan x="73.121582" y="30">PLAY SOLO GAME</tspan>
+                </text>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,44 @@
+%table.table{:border => 1}
+	%tbody
+		%tr
+			%th
+				Song Id
+			%th
+				Total Score
+			%th
+				Song Title
+			%th
+				Song Artist
+			%th
+				Song Year
+			%th
+				Song Genre
+			%th
+				Username
+			%th
+				Game
+			%th
+				Started at
+
+		-@player_song_history.each do |row|
+			%tr
+				%td
+					=row[0]
+				%td
+					=row[1]
+				%td
+					=row[2]
+				%td
+					=row[3]
+				%td
+					=row[4]
+				%td
+					=row[5]
+				%td
+					=row[6]
+				%td
+					=link_to row[8], '/admin/games/'+row[8]
+				%td
+					=row[9]
+%br
+=button_to('Download Guess Data', admin_player_guess_history_path(format: 'xls', id: params[:id]), disable_with: "Downloading...")

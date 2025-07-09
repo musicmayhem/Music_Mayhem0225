@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html style="box-sizing: border-box !important;">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="content-type">
+
+
+
+<style>body {
+margin: 0; padding: 0; font-size: 16px;
+}
+a:visited {
+color: #222 !important;
+}
+a:hover {
+color: #444 !important;
+}
+.gray-btn {
+border: 1px solid #aaa !important;
+background: #1eb2e4;
+font-weight: bold;
+font-size: 14px
+width:300px;
+padding: 10px;
+}
+.gray-btn:hover {
+border: 1px solid #aaa !important;
+background: #ccc;
+}
+caption {
+  padding: 15px 0;
+}
+table, th, td {
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  width: 100%;
+}
+td {
+  padding: 3px 10px;
+}
+tbody > tr >  td:first-child{
+  width: 50%;
+  font-weight: bold;
+}
+tbody > tr >  td:last-child{
+  width: 50%;
+}
+
+.medium-font {
+  font-size: 14px !important;
+}
+.description {
+  font-size: small !important;
+  margin-left: 40px !important;
+  margin-top: auto !important;
+}
+.sub-bullets {
+  margin-left: 40px !important;
+  font-size: small !important;
+  margin-top: auto !important;
+}
+
+.sub-bullets div {
+  display: table-header-group;
+  margin-left: 40px !important;
+  font-size: small !important;
+}
+
+
+</style>
+</head>
+  <body id="body" style="font-size: 16px; box-sizing: border-box !important; margin: 0; padding: 0;">
+  	<div class="email-background" style='box-sizing: border-box !important; background-color: #fff !important; width: 100% !important; font-family: "Muli", sans-serif !important; position: relative !important; padding: 30px 20px;'>
+  		<div class="email-preheader" style="box-sizing: border-box !important;">
+
+  		</div>
+  		<div class="email-container" style="box-sizing: border-box !important; max-width: 600px !important; background-color: white !important; box-shadow: 0 5px 20px rgba(0,0,0,0.1) !important; border-radius: 10px !important; color: #444 !important; position: relative !important; z-index: 1 !important; overflow: hidden !important; margin: 0 auto; padding: 40px 0px 0%; border: 1px solid #eee;">
+  			<div class="email-body" style="box-sizing: border-box !important; line-height: 1.6 !important; margin: 30px 0 40px; padding: 0 30px;">
+						<div class="signature" style="box-sizing: border-box !important; margin-top: 30px !important;" align="left">
+              <p>Hey <b><%= @user.email %></b>,</p>
+              <p>Welcome to Mayhem </p>
+              <p>Ready to play</p>
+              <p>Following is the OTP for your account conformation</p>
+              <p class="gray-btn"><%= @otp %></p>
+			        <p>--Team Mayhem</p>
+
+            </div>
+  			</div>
+  			<div class="email-footer" style="box-sizing: border-box !important; background-color: rgba(250,250,250,1) !important; margin-top: 50px !important; padding: 20px;" align="center">
+						<div class="text-center" style="box-sizing: border-box !important;">
+              <p><b>NOTE:</b> We take player privacy seriously! We may follow up with you via email but we do not sell or share your information.</p>
+							<p class="gray-btn"><a href="https://gomayhem.com" >Visit Mayhem Trivia</a>
+						</div>
+					</div>
+					<div class="blue-footer" style="box-sizing: border-box !important; background-color: #b63044 !important; color: #fff !important; padding: 2px;" align="center">
+							<p style="box-sizing: border-box !important; color: inherit !important; text-decoration: none !important; font-size: inherit !important; font-family: inherit !important; font-weight: inherit !important; line-height: inherit !important;">Trivia That Goes to 11</p>
+						</div>
+					</div>
+  		</div>
+
+  </body>
+</html>

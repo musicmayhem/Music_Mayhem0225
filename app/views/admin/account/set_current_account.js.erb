@@ -1,0 +1,4 @@
+$.modal.close();
+$('.flashes').remove();
+$('.title_bar').after($('<%= raw(flash_notification("Current Account is set to #{link_to @current_account.name, [:admin, @current_account]}")) %>'));
+$('.current-playlist-info').html('<%= escape_javascript(render "admin/accounts/current_account") %>')

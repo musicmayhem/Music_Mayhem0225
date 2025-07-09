@@ -1,0 +1,4 @@
+$.modal.close();
+$('.flashes').remove();
+$('.title_bar').after($('<%= raw(flash_notification("Current Playlist is set to #{link_to @current_playlist.name, [:admin, @current_playlist]}")) %>'));
+$('.current-playlist-info').html('<%= escape_javascript(render "admin/playlists/current_playlist") %>')

@@ -1,0 +1,7 @@
+-if current_admin_user.linked_to_dropbox?
+  =button_to('Sync With Dropbox', sync_dropbox_admin_admin_user_path(current_admin_user), method: :post, remote: true, data: { disable_with: "Syncing......." } )
+  - if current_admin_user.dropbox_synced_at?
+    Last synced at:
+    = time_ago_in_words(current_admin_user.dropbox_synced_at) + ' ago'
+-else
+  =button_to('Connect to Dropbox', dropbox_auth_path, method: :get)

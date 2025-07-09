@@ -1,0 +1,12 @@
+export const START_UPDATE = "auth/START_UPDATE";
+export const UPDATE_FAIL = "auth/UPDATE_FAIL";
+export const UPDATE_SUCCESS = "auth/UPDATE_SUCCESS";
+export const REWARDS = "auth/REWARDS";
+export const WINNER_TICKET = "auth/WINNER_TICKET";
+export const TICKETS = "auth/TICKETS";
+export const REDEEM_TICKET = "auth/REDEEM_TICKET";
+export const SENDING_REWARDS = "auth/SENDING_REWARDS";
+export const REDEEM_PICK = "auth/REDEEM_PICK";
+export const UNMUTE = "auth/UNMUTE";
+export const REDEEM_SPIFF = "auth/REDEEM_SPIFF";
+export const REDEEM_INDEX_SPIFF = "auth/REDEEM_INDEX_SPIFF";

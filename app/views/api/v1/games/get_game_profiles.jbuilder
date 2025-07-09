@@ -1,0 +1,1 @@
+json.profile GameProfile.all

@@ -1,0 +1,38 @@
+Tip: Download all the songs from listed playlist
+=button_to('Upload Playlist Song Data to CSV', admin_download_playlist_song_data_path(format: 'xls'), disable_with: "Uploading...")
+%div{:style => 'margin:1rem'}
+=button_to('Download CSV', 'https://s3.amazonaws.com/csv-mayhem/all_playlist_songs.csv',method:'get', disable_with: "Downloading...")
+
+%div{:style => 'margin:1rem 0;border:1px solid #d4d4d4'}
+
+%form
+  %h5 Upload Playlist CSV here
+  %input{:id => 'PlaylistCsv',:accept => ".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel", :name => "csv", :type => "file" }
+  %div{:style => 'margin:1rem 0'}
+%button{:style => "border-radius: 200px;padding: 7px 16px 6px;background: #133352;border: solid 1px #686868;color: #efefef;cursor: pointer;", :onClick => "uploadCsv()" } Upload Csv
+
+
+:javascript
+  function uploadCsv(){
+    var files = document.getElementById('PlaylistCsv').files;
+    if (!files.length) {
+      return alert('Please choose a file to upload first.');
+    }
+    var file = files[0];
+    var fileName = file.name;
+    var fdata = new FormData()
+    fdata.append("data", file)
+    $.ajax({
+      method: "POST",
+      url: "/admin/upload_playlist_csv",
+      data: fdata,
+      contentType: false,
+      processData: false,
+      success: function(data){
+        alert("PLAYLIST CSV UPLOADED!!!")
+        location.reload()
+      }
+    });
+    }
+
+
