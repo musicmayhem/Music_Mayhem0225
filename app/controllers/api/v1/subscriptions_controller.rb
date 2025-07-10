@@ -1,10 +1,10 @@
 module Api
   module V1
     class SubscriptionsController < ApplicationController
-      before_filter :check_user, :except => [:stripe_web_hooks]
-      skip_before_filter :verify_authenticity_token, :only => [:stripe_web_hooks]
-      respond_to :json
-      swagger_controller :subscriptions, 'Subscriptions'
+    #   before_filter :check_user, :except => [:stripe_web_hooks]
+    #   skip_before_filter :verify_authenticity_token, :only => [:stripe_web_hooks]
+    #   respond_to :json
+    #   swagger_controller :subscriptions, 'Subscriptions'
 #
 #       swagger_api :create do
 #         summary 'Plann Subscriptions'
