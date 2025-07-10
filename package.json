@@ -31,13 +31,13 @@
     "redux-thunk": "^2.2.0",
     "sortablejs": "^1.10.2",
     "superagent": "^3.8.3",
-    "sweetalert2": "^7.26.28"
+    "sweetalert2": "^7.26.28",
+    "vite": "^5.4.19",
+    "vite-plugin-ruby": "^5.1.1"
   },
   "devDependencies": {
     "@types/react": "^16",
-    "@types/react-dom": "^16",
-    "vite": "^5.4.19",
-    "vite-plugin-ruby": "^5.1.1"
+    "@types/react-dom": "^16"
   },
   "scripts": {
     "dev": "bin/vite dev"
