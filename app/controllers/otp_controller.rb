@@ -1,4 +1,4 @@
-class OTPController < ApplicationController
+class OtpController < ApplicationController
   OTP_EXPIRATION_TIME = 5.minutes.ago
 
   def validate_otp
