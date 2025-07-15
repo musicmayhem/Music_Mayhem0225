@@ -10,12 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_05_05_064502) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_14_074558) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
-  enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
 
   create_table "accounts", id: :serial, force: :cascade do |t|
@@ -563,6 +562,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_05_05_064502) do
     t.boolean "active", default: true
     t.string "before_archive_path", limit: 255
     t.text "public_url"
+    t.string "question_type", default: "song"
     t.index ["path"], name: "index_songs_on_path"
   end
 

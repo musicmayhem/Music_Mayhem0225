@@ -31,18 +31,32 @@ class RegistrationsController < Devise::RegistrationsController
 
 	def create
     a = Account.find_by_username(params[:account][:username]) if params[:account] && params[:account][:username]
-		if !a
-			super
-		else
-			render json: { error: 'username has already been taken' }, status: 300
-		end
-	end
+    if !a
+      build_resource(sign_up_params)
+      resource.save
+      if resource.persisted?
+        if resource.active_for_authentication?
+          sign_in(resource_name, resource)
+          render json: resource, status: :created
+        else
+          expire_data_after_sign_in!
+          render json: { message: "Signed up but #{resource.inactive_message}" }, status: :ok
+        end
+      else
+        clean_up_passwords resource
+        set_minimum_password_length
+        render json: { errors: resource.errors.full_messages }, status: :unprocessable_entity
+      end
+    else
+      render json: { error: 'username has already been taken' }, status: 300
+    end
+  end
 
 	def resend_confirmation
-   if current_account && !current_account.confirmed?
-       current_account.send_confirmation_instructions
-   end
- end
+   	if current_account && !current_account.confirmed?
+       	current_account.send_confirmation_instructions
+   	end
+  end
 
   def configure_create_params
 		devise_parameter_sanitizer.permit(:sign_up, keys: [:name, :email, :username, :password, :password_confirmation])
@@ -59,11 +73,10 @@ class RegistrationsController < Devise::RegistrationsController
 	end
 
 	protected
-	 def set_csrf_headers
+	def set_csrf_headers
 	   if request.format.json?
 	     response.headers['csrf-param'] = request_forgery_protection_token
 	     response.headers['csrf-token'] = form_authenticity_token
 	   end
-	 end
-
+	end
 end

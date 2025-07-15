@@ -4,6 +4,7 @@ import { logoutUser } from '../actions/loginActions'
 import { connect } from 'react-redux'
 import { makeRequest, postRequest } from '../actions/gameAction'
 import { START_DEMO_GAME_FROM_HEADER, CREATE_GAME_FROM_HEADER } from '../constants/gameConstants'
+import { Link } from "react-router-dom";
 let gameWindow = null
 let redirectWindow = null
 class Example extends React.Component {
@@ -136,9 +137,9 @@ class Example extends React.Component {
             this.node = node
           }}
         >
-          <a href="/">
+          <Link to="/">
             <div className="nav-bar-logo" />
-          </a>
+          </Link>
           <div
             onClick={this.handleClick}
             className={this.state.isOpen ? 'nav-bar-hamburger nav-bar-hamburger__open' : 'nav-bar-hamburger'}
@@ -152,17 +153,17 @@ class Example extends React.Component {
           <div className="nav-bar-content-links">
             {showLiveGiftOption && this.props.game.game && this.props.game.game.code && (
               <p>
-                <a style={{ color: 'yellow', marginTop: '-5px' }} href={'/gifting/' + this.props.game.game.code}>
+                <Link style={{ color: 'yellow', marginTop: '-5px' }} to={'/gifting/' + this.props.game.game.code}>
                   <i className="fa fa-gift fa-2x" /> PLAYER REWARDS
                   <br /> & RAFFLES
-                </a>
-                <a href={'/answers/' + this.props.game.game.code}>
+                </Link>
+                <Link href={'/answers/' + this.props.game.game.code}>
                   <i>SURE SHOT ANSWERS</i>
-                </a>
+                </Link>
               </p>
             )}
-            <a href="/">Home</a>
-            <a href="/index">Join Existing Game</a>
+            <Link to="/">Home</Link>
+            <Link to="/index">Join Existing Game</Link>
             {this.props.auth && this.props.auth.accountLoggedIn && (
               <div>
                 <a
@@ -174,12 +175,12 @@ class Example extends React.Component {
                 </a>
                 {this.props.auth.currentAccount &&
                   this.props.auth.currentAccount.role &&
-                  this.props.auth.currentAccount.role == 'host' && <a href="/series">Check League Scores</a>}
+                  this.props.auth.currentAccount.role == 'host' && <Link to="/series">Check League Scores</Link>}
                 {this.props.auth.currentAccount &&
                   this.props.auth.currentAccount.role &&
-                  this.props.auth.currentAccount.role == 'player' && <a href="/my_score">My League Standing</a>}
-                <a href="/career">My Mayhem Career</a>
-                <a href="/accounts/setting">My Account</a>
+                  this.props.auth.currentAccount.role == 'player' && <Link to="/my_score">My League Standing</Link>}
+                <Link to="/career">My Mayhem Career</Link>
+                <Link to="/accounts/setting">My Account</Link>
                 {/* <a href="/buy_plan">My Subscription</a> */}
               </div>
             )}
@@ -190,11 +191,11 @@ class Example extends React.Component {
             >
               solo play/demo
             </a>
-            <a href="/help">Help/Feedback</a>
+            <Link to="/help">Help/Feedback</Link>
             {this.props.auth.currentAccount &&
               this.props.auth.currentAccount.role &&
               this.props.auth.currentAccount.role == 'host' && <a href="/monitor">Mayhem Monitor</a>}
-            {this.props.auth && !this.props.auth.accountLoggedIn && <a href="/login">Login</a>}
+            {this.props.auth && !this.props.auth.accountLoggedIn && <Link to="/login">Login</Link>}
             {this.props.auth && this.props.auth.accountLoggedIn && <a onClick={() => this.logoutUser()}>Logout</a>}
           </div>
           <div className="nav-bar-content-social">
