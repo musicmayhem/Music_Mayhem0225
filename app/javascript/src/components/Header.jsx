@@ -157,7 +157,7 @@ class Example extends React.Component {
                   <i className="fa fa-gift fa-2x" /> PLAYER REWARDS
                   <br /> & RAFFLES
                 </Link>
-                <Link href={'/answers/' + this.props.game.game.code}>
+                <Link to={'/answers/' + this.props.game.game.code}>
                   <i>SURE SHOT ANSWERS</i>
                 </Link>
               </p>
@@ -194,7 +194,7 @@ class Example extends React.Component {
             <Link to="/help">Help/Feedback</Link>
             {this.props.auth.currentAccount &&
               this.props.auth.currentAccount.role &&
-              this.props.auth.currentAccount.role == 'host' && <a href="/monitor">Mayhem Monitor</a>}
+              this.props.auth.currentAccount.role == 'host' && <Link to="/monitor">Mayhem Monitor</Link>}
             {this.props.auth && !this.props.auth.accountLoggedIn && <Link to="/login">Login</Link>}
             {this.props.auth && this.props.auth.accountLoggedIn && <a onClick={() => this.logoutUser()}>Logout</a>}
           </div>
