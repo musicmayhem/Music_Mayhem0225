@@ -42,6 +42,7 @@ import CountDownTimer from "./CountDownTimer";
 import SongAdditionalInfo from "./SongAdditionalInfo";
 import ChatModal from "./ChatModal";
 import Modal from "react-responsive-modal";
+import { Link } from "react-router-dom";
 
 const renderSelectField = ({
   input,
@@ -1007,8 +1008,8 @@ class GameRemote extends React.Component {
                     textAlign: "center",
                   }}
                 >
-                  <a
-                    href={
+                  <Link
+                    to={
                       "/config/" +
                       this.props.match.params.game_code +
                       "?continue"
@@ -1024,7 +1025,7 @@ class GameRemote extends React.Component {
                     }}
                   >
                     Configure
-                  </a>{" "}
+                  </Link>{" "}
                   | Control
                 </h4>
                 <Row center="xs">

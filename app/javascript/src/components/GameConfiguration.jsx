@@ -36,6 +36,7 @@ import ChatModal from './ChatModal'
 import { HelpSection } from './Utils/HelpSection'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Link } from 'react-router-dom'
 
 const renderSelectField = ({ input, label, meta: { touched, error }, ...custom }) => (
   <FormGroup className="custom-form-field-w-label">
@@ -797,7 +798,7 @@ class GameConfiguration extends React.Component {
                             >
                               Configure |
                             </a>{' '}
-                            <a href={'/remote/' + this.props.match.params.game_code}>Control </a>
+                            <Link to={'/remote/' + this.props.match.params.game_code}>Control </Link>
                           </h4>
                           {!standardTriviaMode && !mayhemMatesMode && accountRole == 'host' && !current_session && (
                             <Field
