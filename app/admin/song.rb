@@ -37,6 +37,7 @@ ActiveAdmin.register Song do
   filter :year
   filter :length_in_seconds
   filter :active
+  filter :question_type
 
   index do
     render partial: 'admin/shared/set_current_playlist_form', locals: {resource: "songs"}
@@ -59,6 +60,7 @@ ActiveAdmin.register Song do
     column :additional_data do |song|
       get_addtional_data_section(song)
     end
+    column :updated_at
 
     actions
   end

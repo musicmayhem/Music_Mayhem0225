@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_14_074558) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_18_133541) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -547,7 +547,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_14_074558) do
   end
 
   create_table "songs", id: :serial, force: :cascade do |t|
-    t.string "title", limit: 255
+    t.string "title", limit: 512
     t.string "artist", limit: 255
     t.string "length_in_seconds", limit: 255
     t.integer "year"
@@ -574,6 +574,19 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_14_074558) do
     t.datetime "created_at", precision: nil, null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["account_id"], name: "index_spiffs_on_account_id"
+  end
+
+  create_table "subject_songs", force: :cascade do |t|
+    t.bigint "subject_id"
+    t.bigint "song_id"
+    t.index ["song_id"], name: "index_subject_songs_on_song_id"
+    t.index ["subject_id"], name: "index_subject_songs_on_subject_id"
+  end
+
+  create_table "subject_tags", force: :cascade do |t|
+    t.string "name"
+    t.integer "question_count"
+    t.boolean "active", default: true
   end
 
   create_table "subscriptions", id: :serial, force: :cascade do |t|

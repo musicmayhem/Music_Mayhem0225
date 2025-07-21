@@ -109,7 +109,7 @@ ActiveAdmin.register Playlist do
   end
 
   form do |f|
-    f.semantic_errors *f.object.errors.keys
+    f.semantic_errors *f.object.errors.attribute_names
     f.inputs "Create Playlist" do
       f.input :account_id, input_html: {value: 23}, :as => :hidden
       f.input :name
