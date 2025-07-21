@@ -287,6 +287,12 @@ development:
     # validate_update_replace: false
 
 
+production:
+  clients:
+    default:
+      uri: <%= ENV['MONGO_DB_URI'] %>
+
+
 test:
   clients:
     default:
