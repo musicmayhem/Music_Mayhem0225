@@ -82,29 +82,6 @@ ActiveAdmin.register Song do
     end
   end
 
-  # show do |playlist|
-  #   attributes_table do
-  #     row :title
-  #     row :artist
-  #     row :year
-  #     row :length_in_seconds
-  #     row :genres do |song|
-  #       song.genres.map(&:name).join ', '
-  #     end
-  #     row :active do |song|
-  #       song.active ? "Yes" : "No"
-  #     end
-  #     row :path
-  #     row :direct_url
-  #     row :direct_url_expires_at
-  #     row :created_at
-  #     row :updated_at
-  #     row :itunes_affiliate_url
-  #     row "Album Artwork" do
-  #       image_tag(song.itunes_artwork_url)
-  #     end
-  #   end
-  # end
 
   # form do |f|
   #   f.inputs :title
