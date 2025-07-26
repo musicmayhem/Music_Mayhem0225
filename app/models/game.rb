@@ -1,7 +1,7 @@
 class Game < ApplicationRecord
   include ApplicationHelper
 #   TODO
-  # serialize :prev_games_ids
+  serialize :prev_games_ids, coder: YAML
   SONG_PLAY_TIME_OPTIONS = [30, 60, 90, 120]
   SONG_COUNT_OPTIONS = [10, 20, 30, 40, 50]
   GAME_MODE_OPTIONS = [["Multi-Player", "multi"], ["Juke-Box-Auto", "jukeauto"], ["None - Passive Play", "none"], ["Single Player", "single"]]

@@ -476,6 +476,7 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.1)
+    rollbar (3.6.2)
     rubocop (1.75.4)
       json (~> 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -656,6 +657,7 @@ DEPENDENCIES
   rack-cors
   rack-utf8_sanitizer
   rails (~> 7.2.2, >= 7.2.2.1)
+  rollbar
   rubocop-rails-omakase
   ruby-mp3info
   sassc-rails

@@ -112,3 +112,5 @@ gem 'vite_rails'
 gem 'kt-paperclip', '~> 7.2', '>= 7.2.2'
 
 gem 'activeadmin_addons'
+
+gem 'rollbar'

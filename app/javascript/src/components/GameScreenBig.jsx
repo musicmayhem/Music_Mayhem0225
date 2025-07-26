@@ -9,6 +9,7 @@ import { postRequest } from '../actions/gameAction'
 class GameScreenBig extends Component {
   constructor(props) {
     super(props)
+    const isQA = props.game.currentSong.question_type === 'qa'
     this.state = {
       time: props.game.time,
       points: props.game.points,
@@ -18,11 +19,16 @@ class GameScreenBig extends Component {
           ? (parseInt(props.game.currentSong.length_in_seconds) - props.game.time) * 1000
           : (parseInt(props.game.songPlayTime) - props.game.time) * 1000,
       gameStarted: false,
-      visibleSongName: this.makeTitleHash(props.game.songName),
-      visibleArtistName: this.makeArtistHash(props.game.artist),
+      visibleSongName: isQA
+        ? props.game.songName.split('') // answer, will be revealed as hints
+        : this.makeTitleHash(props.game.songName),
+      visibleArtistName: isQA
+        ? props.game.artist.split('') // question, fully revealed
+        : this.makeArtistHash(props.game.artist),
       visibleIndexed: [],
       titleUpdated: true,
     }
+    this.isQA = isQA
   }
   UNSAFE_componentWillMount() {
     window.clearInterval(window.timeInteval)
@@ -33,16 +39,49 @@ class GameScreenBig extends Component {
     this._isMounted = true
     if (this.props.demo) document.getElementsByTagName('body')[0].style.padding = 0
 
-    this.createAudioElement()
-    document.getElementById('songPlayer').onplaying = () => {
-      if (!this.props.mirror && this._currentSongId !== this.props.game.currentSong.id) {
-        this._currentSongId = this.props.game.currentSong.id
-        this.props.setActiveSong({
-          song: { id: this.props.game.currentSong.id },
-          game: { code: this.props.game.gameCode },
-        })
+    if (!this.isQA) {
+      this.createAudioElement()
+    }
+    if (!this.isQA && document.getElementById('songPlayer')) {
+      document.getElementById('songPlayer').onplaying = () => {
+        if (!this.props.mirror && this._currentSongId !== this.props.game.currentSong.id) {
+          this._currentSongId = this.props.game.currentSong.id
+          this.props.setActiveSong({
+            song: { id: this.props.game.currentSong.id },
+            game: { code: this.props.game.gameCode },
+          })
+        }
+        this._playingStarted = true
+        window.clearInterval(window.timeInteval)
+        window.timeInteval = setInterval(() => {
+          if (this.state.time >= 0) this.updateTiles()
+        }, this.interval * 1000)
+        window.clearInterval(window.updateInterval)
+        window.updateInterval = setInterval(() => {
+          if (this.state.time > 0 && this._isMounted) {
+            this.setState({ time: this.state.time - 1 })
+          } else if (this.state.time == 0 && this._playingStarted) {
+            window.clearInterval(window.timeInteval)
+            if (this.props.game && !this.props.game.campaign_id && this._leaderboardRequest && this._isMounted) {
+              this.showLeaderBoardRequest()
+              this._leaderboardRequest = false
+            }
+            if (this.props.game && this.props.game.campaign_id && this._adCampRequest && this._isMounted) {
+              this.showAdCampRequest()
+              this._adCampRequest = false
+            }
+          }
+        }, 1000)
       }
-      this._playingStarted = true
+    }
+
+    if (document.getElementById('playButton')) {
+      document.getElementById('playButton').onclick = function() {
+        this.startAudio()
+      }.bind(this)
+    }
+    // For QA, start the tile reveal interval for the answer (title)
+    if (this.isQA) {
       window.clearInterval(window.timeInteval)
       window.timeInteval = setInterval(() => {
         if (this.state.time >= 0) this.updateTiles()
@@ -53,22 +92,9 @@ class GameScreenBig extends Component {
           this.setState({ time: this.state.time - 1 })
         } else if (this.state.time == 0 && this._playingStarted) {
           window.clearInterval(window.timeInteval)
-          if (this.props.game && !this.props.game.campaign_id && this._leaderboardRequest && this._isMounted) {
-            this.showLeaderBoardRequest()
-            this._leaderboardRequest = false
-          }
-          if (this.props.game && this.props.game.campaign_id && this._adCampRequest && this._isMounted) {
-            this.showAdCampRequest()
-            this._adCampRequest = false
-          }
         }
       }, 1000)
-    }
-
-    if (document.getElementById('playButton')) {
-      document.getElementById('playButton').onclick = function() {
-        this.startAudio()
-      }.bind(this)
+      this._playingStarted = true
     }
   }
 
@@ -111,6 +137,7 @@ class GameScreenBig extends Component {
   }
 
   createAudioElement() {
+    if (this.isQA) return // Do not create audio for QA type
     if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
       let x = document.createElement('AUDIO')
       x.autoplay = true
@@ -283,7 +310,32 @@ class GameScreenBig extends Component {
             <div />
           </div>
         )}
-        {true && (
+        {this.isQA ? (
+          <div>
+            {/* Always show question (artist) fully revealed */}
+            <div style={{ padding: '2rem 2rem' }}>
+              <div>
+                <h2 style={{ fontWeight: '600', textAlign: 'center', color: '#ffca27' }}>QUESTION</h2>
+              </div>
+              <Row center="xs">
+                <Col xs={12} style={{ perspective: '800px' }}>
+                  {this.renderTiles(this.state.visibleSongName)}
+                </Col>
+              </Row>
+            </div>
+            {/* Always show answer (title) as hints */}
+            <div style={{ padding: '2rem 2rem' }}>
+              <div>
+                <h2 style={{ fontWeight: '600', textAlign: 'center', color: '#ffca27' }}>ANSWER</h2>
+              </div>
+              <Row center="xs">
+                <Col xs={12} style={{ perspective: '800px' }}>
+                  {this.renderTiles(this.state.visibleArtistName)}
+                </Col>
+              </Row>
+            </div>
+          </div>
+        ) : (
           <div>
             <Row middle="xs" center="xs" style={{ padding: '1rem 2rem', borderBottom: '1px solid rgba(0,0,0,0.1)' }}>
               <Col xs={12}>

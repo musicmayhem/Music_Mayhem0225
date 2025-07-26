@@ -30,7 +30,8 @@ class Round < ApplicationRecord
 
   def songs
     scoped = Song.active.order("RANDOM()")
-    if self.game.prev_games_ids.blank?
+    puts "self.game.prev_games_ids: #{self.game.prev_games_ids}"
+    if self.game.prev_games_ids.empty?
       if self.playlist.present?
           p_songs = playlist.songs.pluck(:id)
           ap_songs = game.already_played_song_ids

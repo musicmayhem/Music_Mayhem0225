@@ -1,0 +1,17 @@
+defaults: &defaults
+  access_key_id: <%= ENV["AWS_ACCESS_KEY"] %>
+  secret_access_key: <%= ENV["AWS_SECRET_KEY"] %>
+  bucket: <%= ENV["S3_BUCKET_NAME"] %>
+  csv_bucket: <%= ENV["S3_CSV_BUCKET_NAME"] %>
+
+development:
+  <<: *defaults
+
+test:
+  <<: *defaults
+
+staging:
+  <<: *defaults
+
+production:
+  <<: *defaults
