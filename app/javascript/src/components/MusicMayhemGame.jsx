@@ -4,6 +4,7 @@ import HostGameTimer from './HostGameTimer'
 import { connect } from 'react-redux'
 import pusher from '../constants/pusher'
 import GameScreenBig from './GameScreenBig'
+import QAGameScreenBig from './QAGameScreenBig'
 import Leaderboard from './Leaderboard'
 import Advertisement from './Advertisement'
 import FinalLeaderboard from './FinalLeaderboard'
@@ -20,6 +21,7 @@ import SlotMachine from './slotMachine/SlotMachine'
 import { postRequest, instantRequest } from '../actions/gameAction'
 import { GET_SONG_DATA, UPDATE_APPLIANCE } from '../constants/gameConstants'
 import { changeSongVolume, songFadeOut } from '../components/helper'
+import ScreenRouter from './ScreenRouter'
 
 class MusicMayhemGame extends React.Component {
   state = {
@@ -41,6 +43,7 @@ class MusicMayhemGame extends React.Component {
     spinWheel: false,
     playerNames: null,
     wheelType: null,
+    isQA: false
   }
 
   UNSAFE_componentWillMount() {
@@ -84,6 +87,7 @@ class MusicMayhemGame extends React.Component {
 
     if (!this.props.game.game && game.game) {
       const profile = game.current_profile
+      console.log(profile)
       this.setState({
         gameId: game.game.id,
         enableSplash: profile.enable_splash,
@@ -91,6 +95,7 @@ class MusicMayhemGame extends React.Component {
         splashDuration: profile.splash_duration,
         roundStartingAudio: profile.round_starting_audio,
         scoreboardDuration: profile.scoreboard_duration,
+        isQA: profile.name.includes('QA'), 
       })
       this.loadGameData(game)
       if (game.game.state == 'Game Over') {
@@ -216,6 +221,14 @@ class MusicMayhemGame extends React.Component {
       document.querySelector('.video-background > video').ended
     )
       document.querySelector('.video-background > video').play()
+  }
+  isQAGame = () => {
+    if (!this.props.game.game && game.game) {
+      const profile = game.current_profile
+      console.log(profile)
+      if (profile.name.includes('QA')) return true
+    }
+    return false
   }
 
   loadGameData(gameData) {
@@ -523,6 +536,7 @@ class MusicMayhemGame extends React.Component {
       spinWheel,
       playerNames,
       wheelType,
+      isQA,
     } = this.state
     const { game, pusher } = this.props
     const gameScreenBigConditons =
@@ -565,9 +579,9 @@ class MusicMayhemGame extends React.Component {
                 beginGame={value => this.setState({ beginGame: value })}
               />
             )}
-            {gameScreenBigConditons && (
-              <GameScreenBig
-                game={{
+            {gameScreenBigConditons && ( 
+                <ScreenRouter
+              game={{
                   currentSong: game.loaded_song,
                   songCount: pusherCurrentSongCount ? pusherCurrentSongCount : this.props.game.game.song_of_songs_count,
                   seq: {
@@ -587,6 +601,7 @@ class MusicMayhemGame extends React.Component {
                   show_year_hint: game.game.show_year_hint,
                   campaign_id: game.game.campaign_id,
                   game_code_display: game.game.game_code_display,
+                  isQA: isQA,
                 }}
               />
             )}

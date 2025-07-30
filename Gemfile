@@ -114,3 +114,9 @@ gem 'kt-paperclip', '~> 7.2', '>= 7.2.2'
 gem 'activeadmin_addons'
 
 gem 'rollbar'
+
+# gem 'levenshtein'
+# gem 'levenshtein-ffi', :require => 'levenshtein'
+gem 'mini-levenshtein'
+
+# gem 'damerau-levenshtein'

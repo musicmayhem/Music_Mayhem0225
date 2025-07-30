@@ -127,11 +127,22 @@ class Leaderboard extends React.Component {
             <h3 style={{ lineHeight: '1', fontWeight: '600', fontSize: '4vh', fontStyle: 'italic' }}>
               {this.props.songCount || 'No Data'}
             </h3>
-            <h2 style={{ lineHeight: '1', fontWeight: '600', fontSize: '5vh' }}>
+            {(this.props.loadedSong && this.props.loadedSong.question_type == 'qa') ? 
+            (
+              <h2 style={{ lineHeight: '1', fontWeight: '600', fontSize: '5vh' }}>
+              {this.props.loadedSong ? this.props.loadedSong.title : 'No title'} 
+              <br />
+              {this.props.loadedSong ? this.props.loadedSong.artist : ''} 
+              </h2>
+            ) : 
+            (
+              <h2 style={{ lineHeight: '1', fontWeight: '600', fontSize: '5vh' }}>
               {this.props.loadedSong ? this.props.loadedSong.title : 'No title'} by{' '}
               {this.props.loadedSong ? this.props.loadedSong.artist : 'No artist'} {' '}
               ({this.props.loadedSong ? this.props.loadedSong.year : ''})
             </h2>
+            )}
+            
           </Col>
         </Row>
         <Row center="xs">

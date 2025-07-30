@@ -303,6 +303,7 @@ GEM
     mimemagic (0.4.3)
       nokogiri (~> 1)
       rake
+    mini-levenshtein (0.1.2)
     mini_mime (1.1.5)
     minitest (5.25.5)
     mongo (2.21.1)
@@ -641,6 +642,7 @@ DEPENDENCIES
   kt-paperclip (~> 7.2, >= 7.2.2)
   mailchimp-api
   mimemagic
+  mini-levenshtein
   mongoid
   multi-select
   nexmo

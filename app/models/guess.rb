@@ -1,3 +1,5 @@
+require "mini-levenshtein"
+
 class Guess < ApplicationRecord
   GOOD_MATCH_PERCENTAGE = 0.75
 
@@ -58,8 +60,11 @@ class Guess < ApplicationRecord
   end
 
   def match_string(pattern, search, prev_search = nil)
-    percentage = clean(pattern).levenshtein_similar(clean(search))
-    prev_percentage = clean(pattern).levenshtein_similar(clean(prev_search)) rescue 0
+    percentage = MiniLevenshtein.similarity(clean(pattern), clean(search))
+    prev_percentage = MiniLevenshtein.similarity(clean(pattern), clean(prev_search)) rescue 0
+    # percentage = clean(pattern).levenshtein_similar(clean(search))
+    # prev_percentage = clean(pattern).levenshtein_similar(clean(prev_search)) rescue 0
+    puts GOOD_MATCH_PERCENTAGE, percentage
     percentage > GOOD_MATCH_PERCENTAGE  && percentage >= prev_percentage
   end
 
@@ -96,4 +101,5 @@ class Guess < ApplicationRecord
   def clear_cache
     Rails.cache.delete "guess_#{id}"
   end
+
 end

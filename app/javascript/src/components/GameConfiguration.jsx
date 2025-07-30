@@ -595,6 +595,7 @@ class GameConfiguration extends React.Component {
   }
 
   getSongData() {
+    console.log("this.state")
    if (!this.state.reviewPlaylist && (!this.state.songsData || this.state.configChange)) {
      if(this.state.filteredSongCount && (parseInt(this.state.filteredSongCount) < parseInt(this.props.song_count)) || !parseInt(this.props.song_count) || this.props.song_count == ''){
        Swal({
@@ -611,6 +612,7 @@ class GameConfiguration extends React.Component {
          timer: 1500,
        })
      } else {
+
       this.setState({ configChange: false, reviewPlaylist: false })
       this.props
         .instantRequest('games/get_song_data', {
@@ -724,6 +726,9 @@ class GameConfiguration extends React.Component {
       totalSongCount =
         parseInt(this.props.game.game.current_song_count.slice(4, 7)) + parseInt(this.props.song_count) - 1
     }
+    console.log(this.props)
+    console.log("totalSongCount:", totalSongCount)
+    console.log("SongCount:", this.props.song_count)
     if (
       this.props.game &&
       this.props.game.profile &&

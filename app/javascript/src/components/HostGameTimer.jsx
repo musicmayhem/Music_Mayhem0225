@@ -29,6 +29,7 @@ class HostGameTimer extends React.Component {
 
   UNSAFE_componentWillMount() {
     let gameData = this.props.game && this.props.game.game ? this.props.game.game : null
+    console.log(gameData)
     let { showScoreboard, scoreboardDuration, scoreboardUrl } = this.props.scoreboard
     if(showScoreboard && scoreboardDuration && scoreboardUrl)
       var timer = Math.round(( scoreboardDuration + gameData.timer) * 60)

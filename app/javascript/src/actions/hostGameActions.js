@@ -309,6 +309,7 @@ export const createGame = formParams => {
 }
 
 export const updateGameRequest = updateParams => {
+  console.log(updateParams)
   return dispatch => {
     dispatch(sendUpdateGamerequest())
     axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').content
