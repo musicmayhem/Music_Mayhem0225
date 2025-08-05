@@ -42,6 +42,7 @@ module Api
           round_id: @game.current_round_id
         )
         if @game.current_song
+          puts @game.current_song
           song = @game.current_song.song
           guess.song_artist = song.artist
           guess.song_title = song.title
