@@ -44,7 +44,7 @@ class ResetPasswordInstruction extends React.Component {
       np.password &&
       np.password.password_reset_mail_send
     ) {
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'success',
         title: 'Mail Sent Successfully!',

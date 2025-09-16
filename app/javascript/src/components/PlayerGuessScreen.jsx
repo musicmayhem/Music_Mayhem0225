@@ -222,7 +222,7 @@ class UserGuess extends React.Component {
         this.state.titleScoreShown &&
         this.state.artistScoreShown
       ) {
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'warning',
           title: 'Wait for the next Song to Begin, Champ!!',
@@ -230,7 +230,7 @@ class UserGuess extends React.Component {
           timer: 1500,
         })
       } else if (this._timerEnd) {
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'warning',
           title: "Sorry, time's up!",
@@ -288,7 +288,7 @@ class UserGuess extends React.Component {
       .then(result => {
         if (result.value && !localStorage['answered']) {
           localStorage['answered'] = true
-          Swal({
+          Swal.fire({
             position: 'center',
             type: 'success',
             title: 'Submitted Successfully!',
@@ -300,7 +300,7 @@ class UserGuess extends React.Component {
             values: { player: { answer: result.value[0], id: this.props.player } },
           })
         } else {
-          Swal({
+          Swal.fire({
             position: 'center',
             type: 'warning',
             title: 'Already Answered!',

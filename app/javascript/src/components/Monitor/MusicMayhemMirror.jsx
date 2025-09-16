@@ -156,7 +156,7 @@ class MusicMayhemMirror extends React.Component {
             break
           case 'first_player_added':
             if (window.location.pathname.includes('mirror') && data.account) {
-              Swal({
+              Swal.fire({
                 position: 'bottom-right',
                 width: 400,
                 showCloseButton: true,
@@ -187,7 +187,7 @@ class MusicMayhemMirror extends React.Component {
             break
           case 'set_playlist_by_player':
             if (window.location.pathname.includes('mirror')) {
-              Swal({
+              Swal.fire({
                 position: 'bottom-right',
                 width: 400,
                 showCloseButton: true,

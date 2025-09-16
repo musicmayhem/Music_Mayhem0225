@@ -91,7 +91,7 @@ class LiveGifting extends React.Component {
     if (np.account.giftStatus && this._notifyOnce) {
       this._notifyOnce = false
       this.setState({ showSpiffField: false })
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'success',
         title: np.account.giftStatus,
@@ -170,14 +170,14 @@ class LiveGifting extends React.Component {
         element.value = false
       }
       this.setState({ showSpiffField: false, showSpiffValue: true, showSpiffCheckBox: false })
-      Swal({
+      Swal.fire({
         type: 'success',
         title: 'Prize value set Successfully',
         showConfirmButton: false,
         timer: 1500,
       })
     } else {
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'Prize value is required',
         showConfirmButton: false,

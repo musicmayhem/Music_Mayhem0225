@@ -57,7 +57,7 @@ class UserGuess extends React.Component {
     this.props.playerGuess(values, data => {
       if (data.guess && data.guess.artist_score && data.guess.artist_score > 0 && !this.state.artistScoreShown) {
         this.setState({ artistScoreShown: true })
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'success',
           title: `Artist Score: ${data.guess.artist_score}`,
@@ -66,7 +66,7 @@ class UserGuess extends React.Component {
         })
       } else if (data.guess && data.guess.title_score && data.guess.title_score > 0 && !this.state.titleScoreShown) {
         this.setState({ titleScoreShown: true })
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'success',
           title: `Title Score: ${data.guess.title_score}`,
@@ -81,7 +81,7 @@ class UserGuess extends React.Component {
         this.state.titleScoreShown &&
         this.state.artistScoreShown
       ) {
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'warning',
           title: 'Wait for the next Song to Begin Champ!!',
@@ -89,7 +89,7 @@ class UserGuess extends React.Component {
           timer: 1500,
         })
       } else {
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'error',
           title: 'Wrong Answer!',

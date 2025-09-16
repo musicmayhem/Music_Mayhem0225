@@ -28,12 +28,13 @@ export function QAGameScreenBig({
     
     let revealIndex = 0
     const intervalTime = Math.max(1000, (game.time * 1000) / (revealOrder.length + 1))
+    console.log(revealed)
     
     revealIntervalRef.current = setInterval(() => {
       setRevealed(prev => {
         if (revealIndex < revealOrder.length) {
           const next = [...prev]
-          const letterIndex = revealOrder[revealIndex]
+          const letterIndex = revealOrder[revealIndex] - 1
           // Make sure the index is valid and within bounds
           if (letterIndex >= 0 && letterIndex < answerArray.length) {
             next[letterIndex] = true

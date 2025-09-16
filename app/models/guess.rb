@@ -64,7 +64,6 @@ class Guess < ApplicationRecord
     prev_percentage = MiniLevenshtein.similarity(clean(pattern), clean(prev_search)) rescue 0
     # percentage = clean(pattern).levenshtein_similar(clean(search))
     # prev_percentage = clean(pattern).levenshtein_similar(clean(prev_search)) rescue 0
-    puts GOOD_MATCH_PERCENTAGE, percentage
     percentage > GOOD_MATCH_PERCENTAGE  && percentage >= prev_percentage
   end
 

@@ -21,7 +21,7 @@ class ConfirmationPage extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (nextProps.auth && nextProps.auth.confirmed) {
-      Swal({
+      Swal.fire({
         type: 'success',
         title: 'Your have successfully confirmed your account!',
         showConfirmButton: false,
@@ -31,7 +31,7 @@ class ConfirmationPage extends React.Component {
       else this.props.history.push('/accounts/setting?focus=true')
     }
     if (nextProps.auth && nextProps.auth.errors) {
-      Swal({
+      Swal.fire({
         type: 'error',
         title: `${nextProps.auth.errors}`,
         showConfirmButton: false,

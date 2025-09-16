@@ -33,7 +33,7 @@ class Picks extends React.Component {
   }
 
   warningSwal(){
-    Swal({
+    Swal.fire({
       position: 'center',
       type: 'warning',
       title: 'Cannot be used here!',
@@ -46,7 +46,7 @@ class Picks extends React.Component {
   pickRedeemResponse(np){
     this._runOnce = false
     if (np.account.pickRedeemed == 1) {
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'success',
         title: 'Picks Redeemed',
@@ -57,7 +57,7 @@ class Picks extends React.Component {
       this.rewardRequest()
     } else if (np.account.pickRedeemed == 2){
         if (np.account.lastPickRedeemed === 'Pick Playlist' || np.account.lastPickRedeemed === 'Mute Player') {
-          Swal({
+          Swal.fire({
             position: 'center',
             type: 'warning',
             title: 'Dang, someone beat you to it!  Try again later!',
@@ -66,7 +66,7 @@ class Picks extends React.Component {
           })
         } else if (np.account.lastPickRedeemed === 'Free Ride') {
             if( np.account.pickRedeemedPreviously){
-              Swal({
+              Swal.fire({
                 position: 'center',
                 type: 'warning',
                 title: 'Already redeemed!',
@@ -80,7 +80,7 @@ class Picks extends React.Component {
         } else if (np.account.lastPickRedeemed === 'Sneak Peek'){
             this.warningSwal()
         } else {
-          Swal({
+          Swal.fire({
             position: 'center',
             type: 'warning',
             title: 'Sorry!',
@@ -117,7 +117,7 @@ class Picks extends React.Component {
     this._runOnce = true
     let gamePlayers = this.objectify(this.props && this.props.game && this.props.game.allPlayers)
     if (pick == 'Mute Player' && this.props.songStatus == false) {
-      Swal({
+      Swal.fire({
         title: 'Mute Player',
         input: 'select',
         inputOptions: gamePlayers,
@@ -140,7 +140,7 @@ class Picks extends React.Component {
         }
       })
     } else {
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'warning',
         title: 'Whoa There, Horsey!',
@@ -153,7 +153,7 @@ class Picks extends React.Component {
   redeemReward = pick => {
     this._runOnce = true
     if(this.props.sneakPeekRedeemed && pick == 'Sneak Peek'){
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'warning',
         title: 'Already redeemed!',

@@ -216,7 +216,7 @@ class GameConfiguration extends React.Component {
       // }
       if (nextProps.game.gameDataRecieved && nextProps.game.gameUpdated) {
         localStorage['game_config_updated'] = true
-        Swal({
+        Swal.fire({
           type: 'success',
           title: 'Updated...',
           text: 'Game Updated successfully!',
@@ -276,7 +276,7 @@ class GameConfiguration extends React.Component {
     else if (this.state.mayhemMatesMode)
       this.startMayhemMates()
     else if (this.state.accountRole == 'host' &&  playlist[0] && values['game']['song_count'] > playlist[0][2]) {
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'Song Count should be less the playlist songs',
         showConfirmButton: false,
@@ -289,7 +289,7 @@ class GameConfiguration extends React.Component {
       (values.game.campaign_id == '0' || values.game.campaign_id == null || this.venue_name === '')
     ) {
       this.campaign_id = 0
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'Venue is required',
         showConfirmButton: false,
@@ -376,7 +376,7 @@ class GameConfiguration extends React.Component {
         type: RESET_SCORE,
         values: { game: { code: this.props.match.params.game_code } },
       })
-      Swal({
+      Swal.fire({
         type: 'success',
         title: 'Updated...',
         text: 'Score Reset Successfully!',
@@ -391,7 +391,7 @@ class GameConfiguration extends React.Component {
       type: RESET_GAME,
       values: { game: { code: this.props.match.params.game_code } },
     })
-    Swal({
+    Swal.fire({
       type: 'success',
       title: 'Updated...',
       text: 'Game Reset Successfully!',
@@ -408,7 +408,7 @@ class GameConfiguration extends React.Component {
        window.history.pushState('object or string','Title', 'config/'+this.props.match.params.game_code+'?Continue')
      }
      else
-       Swal({
+       Swal.fire({
          type: 'warning',
          title: 'Venue is required',
          showConfirmButton: false,
@@ -422,7 +422,7 @@ class GameConfiguration extends React.Component {
        window.history.pushState('object or string','Title', 'config/'+this.props.match.params.game_code+'?Continue')
      }
      else
-       Swal({
+       Swal.fire({
          type: 'warning',
          title: 'Venue is required',
          showConfirmButton: false,
@@ -598,14 +598,14 @@ class GameConfiguration extends React.Component {
     console.log("this.state")
    if (!this.state.reviewPlaylist && (!this.state.songsData || this.state.configChange)) {
      if(this.state.filteredSongCount && (parseInt(this.state.filteredSongCount) < parseInt(this.props.song_count)) || !parseInt(this.props.song_count) || this.props.song_count == ''){
-       Swal({
+       Swal.fire({
          type: 'warning',
          title: 'You cannot proceed with this song count',
          showConfirmButton: false,
          timer: 1500,
        })
      } else if (this.props.playlist_id == '0') {
-       Swal({
+       Swal.fire({
          type: 'warning',
          title: 'Please Select Playlist First',
          showConfirmButton: false,

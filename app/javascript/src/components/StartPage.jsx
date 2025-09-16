@@ -1,5 +1,5 @@
 import React from "react";
-import { Container } from "reactstrap";
+import { Button, Container } from "reactstrap";
 import { Row, Col } from "react-flexbox-grid";
 import { Link } from "react-router-dom";
 import Record from "../images/icon_music.svg";
@@ -10,6 +10,7 @@ import { checkUserIsLogin } from "../actions/loginActions";
 import { connect } from "react-redux";
 import { makeRequest } from "../actions/gameAction";
 import { START_DEMO_GAME } from "../constants/gameConstants";
+import Swal from "sweetalert2";
 
 let redirectWindow = null;
 class Main extends React.Component {

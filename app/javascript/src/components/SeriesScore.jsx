@@ -24,7 +24,7 @@ class Main extends React.Component {
   }
   sendEmail = x => {
     this.props.postRequest('player/send_email_to_players', { type: SEND_USERS_EMAIL, values: { series: x.id } })
-    Swal({
+    Swal.fire({
       position: 'center',
       type: 'success',
       title: 'Mail Send Successfully',

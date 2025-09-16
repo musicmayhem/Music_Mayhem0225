@@ -77,7 +77,7 @@ class Login extends React.Component {
       Object.keys(nextProps.auth.confirmation_status).length > 0
     ) {
       this.setState({ showOnce: false })
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'success',
         title: 'Please check your Email!!',

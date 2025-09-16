@@ -82,7 +82,7 @@ class UserGuess extends React.Component {
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (!this.props.answerState && nextProps.answerState) {
-      Swal({
+      Swal.fire({
         position: 'center',
         type: 'success',
         title: 'Answer Submitted',

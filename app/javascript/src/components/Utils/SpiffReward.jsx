@@ -70,7 +70,7 @@ class RewardSpiff extends Component {
           })
           .then(res => {
             if (res) {
-              Swal({
+              Swal.fire({
                 type: 'success',
                 title: 'Prize value set Successfully',
                 showConfirmButton: false,
@@ -81,7 +81,7 @@ class RewardSpiff extends Component {
           })
       }
     } else {
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'Prize value is required',
         showConfirmButton: false,
@@ -97,7 +97,7 @@ class RewardSpiff extends Component {
       })
       .then(res => {
         if (res) {
-          Swal({
+          Swal.fire({
             type: 'warning',
             title: 'Prize value removed Successfully',
             showConfirmButton: false,

@@ -198,10 +198,10 @@ class GameRemote extends React.Component {
   _showNextSongs = false;
 
   resetGame = () => {
-    Swal({
+    Swal.fire({
       title: "HOLD UP!",
       text: "Resetting gives you a new game code. This is a last resort if you're in the middle of a game.  If needed, make sure players know about the new code.",
-      type: "warning",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -215,8 +215,8 @@ class GameRemote extends React.Component {
             values: { game: { code: this.props.match.params.game_code } },
           })
         );
-        Swal({
-          type: "success",
+        Swal.fire({
+          icon: "success",
           title: "Updated...",
           text: "Game Reset Successfully!",
           showConfirmButton: false,
@@ -226,8 +226,8 @@ class GameRemote extends React.Component {
     });
   };
   reloadGame() {
-    Swal({
-      type: "success",
+    Swal.fire({
+      icon: "success",
       title: "Loading...",
       text: "Game Loaded Successfully!",
       showConfirmButton: false,
@@ -265,10 +265,10 @@ class GameRemote extends React.Component {
   }
 
   gameOver = () => {
-    Swal({
+    Swal.fire({
       title: "WAIT UP!",
       text: "This is the big moment to see who won!  Be sure you are done with all your drawings before you end the game for the night!",
-      type: "warning",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -286,8 +286,8 @@ class GameRemote extends React.Component {
             },
           })
         );
-        Swal({
-          type: "success",
+        Swal.fire({
+          icon: "success",
           title: "Updated...",
           text: "Game Over Updated Successfully!",
           showConfirmButton: false,
@@ -300,7 +300,7 @@ class GameRemote extends React.Component {
   getWheelType = () => {
     Swal.fire({
       title: "Wheel Type",
-      type: "question",
+      icon: "question",
       input: "select",
       inputOptions: {
         Default: "Default",
@@ -332,10 +332,10 @@ class GameRemote extends React.Component {
         },
       })
     );
-    Swal({
+    Swal.fire({
       title: "MAYHEM SPINNER",
       text: "Mayhem Spinner will be started!",
-      type: "info",
+      icon: "info",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -355,8 +355,8 @@ class GameRemote extends React.Component {
             },
           })
         );
-        Swal({
-          type: "success",
+        Swal.fire({
+          icon: "success",
           title: "Wheel is Spinning .....",
           text: "Mayhem Spinner Started!",
           showConfirmButton: false,
@@ -392,10 +392,10 @@ class GameRemote extends React.Component {
         game: { code: this.props.match.params.game_code },
       })
     );
-    Swal({
+    Swal.fire({
       title: "Advancing song",
       text: "wait for it...",
-      type: "success",
+      icon: "success",
       timer: 1500,
     });
     this.setState({ enableNextSongSkip: false, allowSongAdvance: false });
@@ -519,7 +519,7 @@ class GameRemote extends React.Component {
             break;
           case "campaign_updated":
             if (data.data.jukebox) {
-              Swal({
+              Swal.fire({
                 title: "Campaign Updated!",
                 text: "Now game will be played automatically",
                 icon: "info",
@@ -621,10 +621,10 @@ class GameRemote extends React.Component {
   }
 
   addRound() {
-    Swal({
+    Swal.fire({
       title: "WAIT!",
       text: "Did you do a drawing?  Drawings only work at the end of a round.  When you're ready, proceed to refresh player scores!",
-      type: "warning",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
@@ -636,8 +636,8 @@ class GameRemote extends React.Component {
         this.props.dispatch(
           addNewRound({ game: { code: this.props.match.params.game_code } })
         );
-        Swal({
-          type: "success",
+        Swal.fire({
+          icon: "success",
           title: "Added...",
           text: "Round Added Successfully!",
           showConfirmButton: false,
@@ -839,10 +839,10 @@ class GameRemote extends React.Component {
   };
 
   CampaignUpdatedAlert() {
-    Swal({
+    Swal.fire({
       title: "Campaign Updated!",
       text: "Please recheck configuration now!! ",
-      type: "warning",
+      icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",

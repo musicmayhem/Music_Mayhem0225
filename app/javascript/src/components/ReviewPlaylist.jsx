@@ -13,7 +13,7 @@ class ReviewPlaylist extends React.Component {
   UNSAFE_componentWillMount() {
     this.setState( { songsData: this.props.songsData } )
     if(!this.props.skip)
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'Skip Not Availalble',
         text: 'No more songs left in playlist',
@@ -39,7 +39,7 @@ class ReviewPlaylist extends React.Component {
     }
     if(this.props.skip && !nextProps.skip && this._runOnce){
       this._runOnce = false
-      Swal({
+      Swal.fire({
         type: 'warning',
         title: 'No more songs to skip',
         showConfirmButton: false,

@@ -31,7 +31,7 @@ class Spiffs extends React.Component {
   }
 
   redeemSpiff(spiffId, acc) {
-    Swal({
+    Swal.fire({
       position: 'center',
       type: 'question',
       title: 'Ready to claim your prize?',
@@ -65,7 +65,7 @@ class Spiffs extends React.Component {
             })
           )
         }
-        Swal({
+        Swal.fire({
           type: 'success',
           title: 'Your Spiff Redeemed Successfully!',
           showConfirmButton: false,

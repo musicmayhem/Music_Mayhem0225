@@ -12,7 +12,7 @@ class ApplicanceMode extends React.Component {
     localStorage.removeItem('game_updated')
     this.props.checkUserIsLogin().then(res => {
       if (!res) {
-        Swal({
+        Swal.fire({
           position: 'center',
           type: 'warning',
           title: 'Please LogIn to Continue',

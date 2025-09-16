@@ -20,7 +20,7 @@ class Rewards extends React.Component {
   }
 
   spiff() {
-    Swal({
+    Swal.fire({
       position: 'top-end',
       type: 'success',
       title: 'Show Users Spiff',

@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'
 export function HelpSection() {
-  return Swal({
+  return Swal.fire({
     title: 'Host Help',
     html:
       '<h4>Game Operations</h4>' +

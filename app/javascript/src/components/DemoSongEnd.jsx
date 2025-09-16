@@ -12,7 +12,7 @@ class DemoSongEnd extends React.Component {
   UNSAFE_componentWillMount() {
     if (this._showModal) {
       this._showModal = false
-      Swal({
+      Swal.fire({
         title: 'REGISTER NOW',
         text: 'CLICK ON CREATE ACCOUNT TO REGISTER',
         showCancelButton: true,

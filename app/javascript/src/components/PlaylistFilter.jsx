@@ -106,7 +106,7 @@ class PlaylistFilter extends Component {
               if(parseInt(filteredSongCount))
                 this.props.filterPlaylistModal(false)
               else
-              Swal({
+              Swal.fire({
                 type: 'warning',
                 title: 'You cannot proceed with 0 songs',
                 showConfirmButton: false,

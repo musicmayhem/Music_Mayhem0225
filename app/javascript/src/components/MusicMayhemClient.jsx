@@ -98,7 +98,7 @@ class MusicMayhemClient extends React.Component {
 
     if (!this.props.player.host_playlist && nextProps.player.host_playlist) {
       let inputOptions = this.objectify(nextProps.player.host_playlist)
-      Swal({
+      Swal.fire({
         input: 'select',
         html: 'this window will close in <strong></strong> seconds',
         inputOptions,
@@ -623,7 +623,7 @@ class MusicMayhemClient extends React.Component {
             break
           case 'ask_player_continue':
             this.timer = 21
-            Swal({
+            Swal.fire({
               title: '<strong>Want to play More?</strong>',
               type: 'question',
               html: 'this window will close in <strong></strong> seconds',

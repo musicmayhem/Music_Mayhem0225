@@ -37,7 +37,7 @@ class PlayerGameEnd extends React.Component {
   sendConfirmationMail = () => {
     this.setState({ open: false })
     this.props.dispatch(deviseRequest('/resend_confirmation', { type: POSTING }))
-    Swal({
+    Swal.fire({
       type: 'success',
       title: 'Please check your email!',
       showConfirmButton: false,

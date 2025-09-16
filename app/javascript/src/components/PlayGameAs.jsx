@@ -49,9 +49,9 @@ class PlayGameAs extends React.Component {
       Object.keys(nextProps.auth.confirmation_status).length > 0
     ) {
       this.setState({ showOnce: false });
-      Swal({
+      Swal.fire({
         position: "center",
-        type: "success",
+        icon: "success",
         title: "Please check your Email!!",
         showConfirmButton: false,
         timer: 1500,
