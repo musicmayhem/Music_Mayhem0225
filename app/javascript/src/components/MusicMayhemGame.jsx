@@ -22,6 +22,7 @@ import { postRequest, instantRequest } from '../actions/gameAction'
 import { GET_SONG_DATA, UPDATE_APPLIANCE } from '../constants/gameConstants'
 import { changeSongVolume, songFadeOut } from '../components/helper'
 import ScreenRouter from './ScreenRouter'
+import FinalRevealScreen from './FinalRevealScreen'
 
 class MusicMayhemGame extends React.Component {
   state = {
@@ -605,7 +606,7 @@ class MusicMayhemGame extends React.Component {
                 }}
               />
             )}
-            {beginGame && game.state == 'Showing LeaderBoard' && (
+            {beginGame && game.state == 'Showing LeaderBoard' && game.game.show_scoreboard && (
               <Leaderboard
                 openSession={game.game.open_session}
                 lastSongOfGame={this._lastSongOfGame}
@@ -619,6 +620,17 @@ class MusicMayhemGame extends React.Component {
                 game_code_display={game.game.game_code_display}
                 round_leaderboard={game.game.round_leaderboard}
                 // player11={pusher.pusherData.player11} /*11th place at song leaderboard*/
+              />
+            )}
+            {beginGame && game.state == 'Showing LeaderBoard' && !game.game.show_scoreboard && (
+              <FinalRevealScreen
+                openSession={game.game.open_session}
+                lastSongOfGame={this._lastSongOfGame}
+                automaticSongAdvance={game.game.automatic_song_advance}
+                gameCode={game.game.code}
+                loadedSong={game.loaded_song}
+                songCount={pusherCurrentSongCount ? pusherCurrentSongCount : this.props.game.game.song_of_songs_count}
+                game_code_display={game.game.game_code_display}
               />
             )}
             {beginGame &&
