@@ -19,6 +19,9 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
   const artistSeqRef = useRef([...game.seq.artist])
   const revealInterval = useRef(game.time / (game.seq.title.length + game.seq.artist.length))
   const timeRef = useRef(game.time)
+  // Wall-clock timestamp after which tile reveals are allowed.
+  // Set when audio starts; accounts for letterStartTime offset.
+  const revealAllowedAtRef = useRef(null)
 
   const songPlayTime =
     game.songPlayTime == 0
@@ -135,17 +138,34 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
     }
   }, [])
 
+  // Builds a fully revealed display array from the original string.
+  // Alphanumeric chars are shown as-is, spaces become '^', special chars
+  // are already visible so they pass through unchanged.
+  const buildFullRevealArray = (string) =>
+    string.split('').map(char => (char === ' ' ? '^' : char))
+
+  // Instantly reveals all remaining tiles — called on guessEnd so the
+  // answer is always visible by the time the leaderboard/reveal screen appears.
+  const revealAllRemaining = useCallback(() => {
+    titleSeqRef.current = []
+    artistSeqRef.current = []
+    setVisibleSongName(buildFullRevealArray(game.songName))
+    setVisibleArtistName(buildFullRevealArray(game.artist))
+    setAllTilesRevealed(true)
+  }, [game.songName, game.artist]) // eslint-disable-line react-hooks/exhaustive-deps
+
   // Fires once when the guess window closes
   const handleGuessEnd = useCallback(() => {
     if (mirror || !_leaderboardRequest.current) return
     _leaderboardRequest.current = false
+    revealAllRemaining()
     onPostRequest('games/pusher_update', {
       values: { game: { code: game.gameCode, status: 'guessEnd' } },
     })
     setTimeout(() => {
       onUpdateGameRequest({ game: { code: game.gameCode, state: 'Showing LeaderBoard' } })
     }, songPlayTime)
-  }, [mirror, game.gameCode, songPlayTime, onPostRequest, onUpdateGameRequest])
+  }, [mirror, game.gameCode, songPlayTime, revealAllRemaining, onPostRequest, onUpdateGameRequest])
 
   // Audio setup — runs once on mount
   useEffect(() => {
@@ -162,6 +182,7 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
             game: { code: game.gameCode },
           })
         }
+        revealAllowedAtRef.current = Date.now() + (game.letterStartTime || 0) * 1000
         setIsPlaying(true)
       }
     }
@@ -192,16 +213,39 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
     return () => clearInterval(timerInterval)
   }, [isPlaying, handleGuessEnd])
 
-  // Tile reveal — skipped when all tiles revealed
+  // Tile reveal — honours letterStartTime, pause/resume, and adjusted intervals.
+  //
+  // letterStartTime: reveals don't begin until that many seconds after the song
+  //   starts. We use a wall-clock ref (revealAllowedAtRef) so that if the reveal
+  //   is paused and resumed before the delay has elapsed, only the *remaining*
+  //   portion of the delay is waited — not the full delay again.
+  //
+  // On every (re-)start (initial start or resume after pause) the interval is
+  //   recalculated as timeRef.current / remainingLetters so all tiles finish
+  //   exactly when the timer hits 0.
   useEffect(() => {
-    if (!isPlaying || allTilesRevealed) return
+    if (!isPlaying || allTilesRevealed || game.revealPaused) return
 
-    const revealIntervalId = setInterval(() => {
-      updateTiles()
-    }, revealInterval.current * 1000)
+    let revealIntervalId
 
-    return () => clearInterval(revealIntervalId)
-  }, [isPlaying, allTilesRevealed, updateTiles])
+    const startReveal = () => {
+      const remainingLetters = titleSeqRef.current.length + artistSeqRef.current.length
+      const adjustedInterval =
+        remainingLetters > 0 && timeRef.current > 0
+          ? timeRef.current / remainingLetters
+          : revealInterval.current
+      revealIntervalId = setInterval(updateTiles, adjustedInterval * 1000)
+    }
+
+    // How long until reveals are allowed (0 if the delay has already passed).
+    const delayMs = Math.max(0, (revealAllowedAtRef.current || 0) - Date.now())
+    const startDelayId = delayMs > 0 ? setTimeout(startReveal, delayMs) : (startReveal(), undefined)
+
+    return () => {
+      clearTimeout(startDelayId)
+      clearInterval(revealIntervalId)
+    }
+  }, [isPlaying, allTilesRevealed, game.revealPaused, updateTiles])
 
   const startAudio = () => {
     const player = document.getElementById('songPlayer')

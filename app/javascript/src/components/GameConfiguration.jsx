@@ -209,7 +209,7 @@ class GameConfiguration extends React.Component {
         }
       }
     } else {
-      let arr = ['song_count', 'playlist_id', 'background_music', 'automatic_song_advance', 'background_music_playlist', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard']
+      let arr = ['song_count', 'playlist_id', 'background_music', 'automatic_song_advance', 'background_music_playlist', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard','pause_game_screen','no_leader_board','display_song_count']
       // if (nextProps.game && nextProps.game.game && this._updateSession && !nextProps.game.game.open_session) {
       //   this._updateSession = false
       //   if (nextProps.game.game.campaign_id) this.getCampaign(nextProps.game.game.campaign_id)
@@ -313,6 +313,9 @@ class GameConfiguration extends React.Component {
         game_code_display: true,
         round_leaderboard: true,
         game_over_leaderboard: true,
+        pause_game_screen: false,
+        no_leader_board: false,
+        display_song_count: true,
       }
 
       if (this.state.sessionOption == 'new') {
@@ -401,7 +404,7 @@ class GameConfiguration extends React.Component {
   }
 
   updateGameConfigurationFromProfile = p => {
-    let arr = ['song_count', 'background_music', 'timer', 'automatic_song_advance', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard']
+    let arr = ['song_count', 'background_music', 'timer', 'automatic_song_advance', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard','pause_game_screen','no_leader_board','display_song_count']
     if (p == 'Trivia Mode') {
      if(this.venue_name || this.props.game && this.props.game.game && this.props.game.game && this.props.game.game.campaign_id){
        this.setState({ standardTriviaMode: true, collapse: true })
@@ -1016,6 +1019,24 @@ class GameConfiguration extends React.Component {
                                 type="checkbox"
                               />
                               <Field
+                                name="game.pause_game_screen"
+                                component={renderCheckBoxField}
+                                label="PAUSE GAME SCREEN"
+                                type="checkbox"
+                              />
+                              <Field
+                                name="game.no_leader_board"
+                                component={renderCheckBoxField}
+                                label="NO LEADERBOARD"
+                                type="checkbox"
+                              />
+                              <Field
+                                name="game.display_song_count"
+                                component={renderCheckBoxField}
+                                label="DISPLAY SONG COUNT"
+                                type="checkbox"
+                              />
+                              <Field
                                 name="game.random_play"
                                 component={renderCheckBoxField}
                                 label="RANDOMISE PLAYLIST SONGS"
@@ -1385,6 +1406,9 @@ export default connect(
           profile: 'Default',
           show_scoreboard: false,
           random_play: true,
+          pause_game_screen: false,
+          no_leader_board: false,
+          display_song_count: true,
         },
       },
     }

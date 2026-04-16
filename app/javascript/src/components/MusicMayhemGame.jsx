@@ -37,6 +37,7 @@ class MusicMayhemGame extends React.Component {
     enableSplash: false,
     showPpt: false,
     guessActive: false,
+    revealPaused: false,
     roundStartingAudio: true,
     scoreboardDuration: null,
     scoreboardUrl: null,
@@ -466,6 +467,9 @@ class MusicMayhemGame extends React.Component {
           case 'guess_end':
             this.setState({ guessActive: false })
             break
+          case 'toggle_reveal':
+            this.setState(prev => ({ revealPaused: !prev.revealPaused }))
+            break
           case 'campaign_updated':
             if(!this.state.guessActive && (data.data.jukebox || this.props.game.game && this.props.game.game.jukebox_mode)) this.updateAppliance()
             else this._campaignUpdated = true
@@ -538,6 +542,7 @@ class MusicMayhemGame extends React.Component {
       playerNames,
       wheelType,
       isQA,
+      revealPaused,
     } = this.state
     const { game, pusher } = this.props
     const gameScreenBigConditons =
@@ -603,6 +608,8 @@ class MusicMayhemGame extends React.Component {
                   campaign_id: game.game.campaign_id,
                   game_code_display: game.game.game_code_display,
                   isQA: isQA,
+                  revealPaused: revealPaused,
+                  letterStartTime: game.rounds.settings.letter_start_time || 0,
                 }}
               />
             )}

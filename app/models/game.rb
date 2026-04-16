@@ -207,8 +207,6 @@ class Game < ApplicationRecord
         Pusher["games_#{id}"].trigger('game_event', { type: "skip_song", data: {loaded_song: loaded_song.as_json, reveal_seq_array: reveal_sequence.as_json}  })
 
       when "Playing Song"
-        puts "********************Playing"
-        puts current_song
         Pusher["games_#{id}"].trigger('game_event', { type: "playing_song", data: as_json.merge(current_song: current_song_count, reveal_seq_array: reveal_sequence.as_json) })
 
       when "Active Song"
@@ -218,8 +216,6 @@ class Game < ApplicationRecord
         Pusher["games_#{id}"].trigger('game_event', { type: "song_loaded", data: {setting: current_round.settings,game: as_json, loaded_song: loaded_song.as_json, reveal_seq_array: reveal_sequence.as_json,song_of_songs_count: current_song_count } })
 
       when "Song Ended"
-        puts "********************ended"
-        puts current_song
         Pusher["games_#{id}"].trigger('game_event', { type: "song_ended", data: current_song.song.attributes.merge({'song_of_songs_count'=>song_of_songs_count, 'code'=>code}) })
 
       when "Showing LeaderBoard"

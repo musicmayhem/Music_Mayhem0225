@@ -119,6 +119,9 @@ const FinalRevealScreen = ({
           {artist}
         </h1>
       </div>
+
+      {/* Hidden button targeted by the advance_next_song pusher handler in MusicMayhemGame */}
+      <button id="next-song-btn" onClick={sendNextEvent} style={{ display: 'none' }} />
     </div>
   )
 }

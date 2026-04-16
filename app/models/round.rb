@@ -1,7 +1,8 @@
 class Round < ApplicationRecord
   store_accessor :settings, :song_count, :playlist_id, :campaign_id, :era_ids, :genre_ids, :song_ids, :total_play_length, :fade_out_length,
                  :guessing_length, :guessing_percentage, :letter_start_time, :manual_control, :song_play_time,
-                 :allowed_to_continue, :adv_duration,:leaderboard_display_time,:game_over_display_time,:point_value,:guess_timer,:background_music_playlist
+                 :allowed_to_continue, :adv_duration,:leaderboard_display_time,:game_over_display_time,:point_value,:guess_timer,
+                 :background_music_playlist, :start_letter_reveal_time 
 
   belongs_to :game
   has_many :players
@@ -18,7 +19,7 @@ class Round < ApplicationRecord
     self.fade_out_length     ||= 10
     self.guessing_length     ||= 100
     self.guessing_percentage ||= 70
-    self.letter_start_time   ||= 0
+    self.letter_start_time   ||= 5
     self.song_play_time      ||= 120 #consider remove this column?
     self.song_count          ||= ENV['DEFAULT_SONG_COUNT'] || 11 # allow all songs to be played
     self.adv_duration        ||= 5
@@ -30,7 +31,6 @@ class Round < ApplicationRecord
 
   def songs
     scoped = Song.active.order("RANDOM()")
-    puts "self.game.prev_games_ids: #{self.game.prev_games_ids}"
     if self.game.prev_games_ids.empty?
       if self.playlist.present?
           p_songs = playlist.songs.pluck(:id)

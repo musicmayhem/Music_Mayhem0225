@@ -1237,8 +1237,9 @@ module Api
           :timer, :state, :campaign_id, :background_music, :session_id,
           :open_session, :automatic_round_advance, :remote_host_id,
           :automatic_song_advance, :profile_id, :show_title_hint, :show_artist_hint,
-          :show_scoreboard, :random_play, :show_year_hint,:show_scoreboard,
-          :random_play, :game_code_display, :round_leaderboard, :game_over_leaderboard
+          :show_scoreboard, :random_play, :show_year_hint,
+          :game_code_display, :round_leaderboard, :game_over_leaderboard,
+          :pause_game_screen, :no_leader_board, :display_song_count
         )
       end
 

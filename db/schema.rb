@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_07_18_133541) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_16_033445) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -253,6 +253,22 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_18_133541) do
     t.datetime "updated_at", precision: nil
   end
 
+  create_table "file_sync_records", primary_key: "record_id", id: :serial, force: :cascade do |t|
+    t.string "filename", limit: 255, null: false
+    t.string "s3_key", limit: 512, null: false
+    t.string "dropbox_path", limit: 512, null: false
+    t.bigint "file_size", default: 0
+    t.string "dropbox_file_id", limit: 255
+    t.string "content_hash", limit: 255
+    t.datetime "sync_timestamp", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
+    t.datetime "created_at", precision: nil, default: -> { "CURRENT_TIMESTAMP" }
+    t.index ["dropbox_path"], name: "idx_dropbox_path"
+    t.index ["s3_key"], name: "idx_s3_key"
+    t.index ["sync_timestamp"], name: "idx_sync_timestamp"
+    t.unique_constraint ["dropbox_path"], name: "file_sync_records_dropbox_path_key"
+    t.unique_constraint ["s3_key"], name: "file_sync_records_s3_key_key"
+  end
+
   create_table "game_constraints", id: :serial, force: :cascade do |t|
     t.integer "game_id"
     t.integer "constraint_id"
@@ -304,7 +320,6 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_18_133541) do
     t.boolean "manual_control", default: false
     t.string "game_mode", limit: 255
     t.boolean "random_play", default: true
-    t.text "prev_games_ids", default: "--- []\r\n"
     t.integer "challenge_id"
     t.boolean "review_song", default: false
     t.integer "campaign_id"
@@ -336,6 +351,10 @@ ActiveRecord::Schema[7.2].define(version: 2025_07_18_133541) do
     t.boolean "game_code_display", default: true
     t.boolean "round_leaderboard", default: true
     t.boolean "game_over_leaderboard", default: true
+    t.text "prev_games_ids", default: "--- []\n"
+    t.boolean "pause_game_screen", default: false, null: false
+    t.boolean "no_leader_board", default: false, null: false
+    t.boolean "display_song_count", default: true, null: false
   end
 
   create_table "genre_songs", id: :serial, force: :cascade do |t|
