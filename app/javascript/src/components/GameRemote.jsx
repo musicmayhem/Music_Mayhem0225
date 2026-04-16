@@ -101,6 +101,7 @@ class GameRemote extends React.Component {
     songDuration: null,
     showChatModal: false,
     gamePlayers: null,
+    revealPaused: false,
   };
 
   UNSAFE_componentWillMount() {
@@ -1094,6 +1095,32 @@ class GameRemote extends React.Component {
                       </Button>
                     </Col>
                   </div>
+                </Row>
+                <Row center="xs">
+                  <Col xs={12} style={{ marginTop: "1rem" }}>
+                    {!this._autoAdvance && songCount != null && (
+                      <Button
+                        className="mayhem-btn-yellow"
+                        style={{ width: "100%" }}
+                        onClick={() => {
+                          const paused = !this.state.revealPaused
+                          this.setState({ revealPaused: paused })
+                          this.props.dispatch(
+                            postRequest("games/pusher_update", {
+                              values: {
+                                game: {
+                                  code: this.props.match.params.game_code,
+                                  status: "toggle_reveal",
+                                },
+                              },
+                            })
+                          )
+                        }}
+                      >
+                        {this.state.revealPaused ? "RESUME REVEAL" : "PAUSE REVEAL"}
+                      </Button>
+                    )}
+                  </Col>
                 </Row>
                 <Row center="xs">
                   <Col xs={12} style={{ marginTop: "1.5rem" }}>

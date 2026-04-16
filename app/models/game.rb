@@ -409,8 +409,6 @@ class Game < ApplicationRecord
   end
 
   def create_round
-    p "===================++++++++<<<<<<<<<<<"
-    p self.rounds.last
     last_round = self.rounds.last
     rounds.create(
       genre_ids: self.genre_constraints.pluck(:id),

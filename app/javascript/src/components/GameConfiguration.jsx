@@ -104,6 +104,11 @@ const validate = values => {
 
 const gameTimes = START_GAME_IN.map((game_time, index) => <option key={index}> {game_time.time} </option>)
 
+const REVEAL_START_TIMES = [0, 5, 10, 15, 20]
+const revealStartTimes = REVEAL_START_TIMES.map((t, index) => (
+  <option key={index} value={t}>{t} seconds</option>
+))
+
 class GameConfiguration extends React.Component {
   state = {
     open: false,
@@ -209,7 +214,7 @@ class GameConfiguration extends React.Component {
         }
       }
     } else {
-      let arr = ['song_count', 'playlist_id', 'background_music', 'automatic_song_advance', 'background_music_playlist', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard','pause_game_screen','no_leader_board','display_song_count']
+      let arr = ['song_count', 'playlist_id', 'background_music', 'automatic_song_advance', 'background_music_playlist', 'show_title_hint', 'show_artist_hint','show_year_hint','game_code_display','round_leaderboard','game_over_leaderboard','pause_game_screen','no_leader_board','display_song_count','letter_start_time']
       // if (nextProps.game && nextProps.game.game && this._updateSession && !nextProps.game.game.open_session) {
       //   this._updateSession = false
       //   if (nextProps.game.game.campaign_id) this.getCampaign(nextProps.game.game.campaign_id)
@@ -845,6 +850,12 @@ class GameConfiguration extends React.Component {
                                 component={renderSelectField}
                                 options={gameTimes}
                                 label="START GAME IN:"
+                              />
+                              <Field
+                                name="game.letter_start_time"
+                                component={renderSelectField}
+                                options={revealStartTimes}
+                                label="START REVEAL TIME (SECONDS):"
                               />
                               <h1
                                 style={{ fontWeight: '700', color: '#ffca27', fontSize: '1rem', cursor: 'pointer', padding: '0.5rem'}}

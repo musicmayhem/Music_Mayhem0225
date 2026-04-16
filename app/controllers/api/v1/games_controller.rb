@@ -1252,7 +1252,7 @@ module Api
       end
 
       def round_config_params
-        params.require(:game).permit(:song_count, :playlist_id, :session_id, :background_music_playlist)
+        params.require(:game).permit(:song_count, :playlist_id, :session_id, :background_music_playlist, :letter_start_time)
       end
     end
   end
