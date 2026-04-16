@@ -6,7 +6,7 @@ import { GIFTING_DATA } from '../../constants/gameConstants'
 import { SENDING_REWARDS } from '../../constants/accountConstants'
 import pusher from '../../constants/pusher'
 import { FormGroup, Label, Input, FormFeedback, Container } from 'reactstrap'
-import { Field, reduxForm, change, reset } from 'redux-form'
+import { Field, reduxForm, change, reset, getFormValues } from 'redux-form'
 import Swal from 'sweetalert2'
 import { checkUserIsLogin } from '../../actions/loginActions'
 import { HelpSection } from '../Utils/HelpSection'
@@ -150,9 +150,41 @@ class LiveGifting extends React.Component {
         values: { game: { code: this.props.match.params.game_code }, ...values },
       })
     )
+    // reset() only restores fields present in initialValues; player checkboxes
+    // are dynamic and absent from initialValues so they must be cleared manually.
     this.props.dispatch(reset('giftForm'))
+    this.props.dispatch(change('giftForm', 'gift.all', false))
+    const { players } = this.props.game
+    if (players) {
+      players.forEach(player => this.props.dispatch(change('giftForm', `gift.${player.id}`, false)))
+    }
     this.setState({ options: 'Tickets' })
     this._notifyOnce = true
+  }
+
+  // Check / uncheck every player checkbox to match the SELECT ALL state.
+  handleSelectAll = checked => {
+    const { players } = this.props.game
+    if (players) {
+      players.forEach(player =>
+        this.props.dispatch(change('giftForm', `gift.${player.id}`, checked))
+      )
+    }
+  }
+
+  // When any individual player is deselected, reflect that on SELECT ALL.
+  handlePlayerToggle = (playerId, checked) => {
+    if (!checked) {
+      this.props.dispatch(change('giftForm', 'gift.all', false))
+    } else {
+      // Auto-check SELECT ALL when every player is now individually checked.
+      const { players } = this.props.game
+      const giftVals = (this.props.formValues && this.props.formValues.gift) || {}
+      const allChecked = players && players.every(p =>
+        p.id === playerId ? true : !!giftVals[p.id]
+      )
+      if (allChecked) this.props.dispatch(change('giftForm', 'gift.all', true))
+    }
   }
 
   pptsOptions = val => {
@@ -265,12 +297,23 @@ class LiveGifting extends React.Component {
               )}
               {options == 'Points' && <Field name="gift.value" component={renderTextField} label="AMOUNT" autoFocus />}
               {players && players.length != 0 && (
-                <Field name="gift.all" component={renderCheckBoxField} label="SELECT ALL" />
+                <Field
+                  name="gift.all"
+                  component={renderCheckBoxField}
+                  label="SELECT ALL"
+                  onChange={e => this.handleSelectAll(e.target.checked)}
+                />
               )}
               {players &&
                 players.length != 0 &&
                 players.map(x => (
-                  <Field key={x.id} name={`gift.${x.id}`} component={renderCheckBoxField} label={x.name} />
+                  <Field
+                    key={x.id}
+                    name={`gift.${x.id}`}
+                    component={renderCheckBoxField}
+                    label={x.name}
+                    onChange={e => this.handlePlayerToggle(x.id, e.target.checked)}
+                  />
                 ))}
               <button className="mayhem-btn-blue btn-full-width" type="submit" style={{ marginTop: '0.5rem' }}>
                 SEND GIFT
@@ -408,6 +451,7 @@ function mapStateToProps(store) {
     auth: store.auth,
     game: store.game,
     account: store.account,
+    formValues: getFormValues('giftForm')(store),
     initialValues: { gift: { type: 'Tickets', value: '1' } },
   }
 }
