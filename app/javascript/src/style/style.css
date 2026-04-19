@@ -1068,6 +1068,60 @@ select.form-control:not([size]):not([multiple]) {
   height: 0px !important;
 }
 
+/* ── Player-screen compact reveal tiles ───────────────────────────────────── */
+.player-reveal-tiles {
+  background: #241b44;
+  padding: 0.6rem 0.5rem 0.5rem;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.player-reveal-label {
+  color: #ffca27;
+  font-size: 10px;
+  font-weight: bold;
+  text-align: center;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.word-break-sm {
+  display: inline-flex;
+  margin: 0 2px;
+}
+
+.letter-sm {
+  width: 20px;
+  height: 26px;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin: 0 1px;
+  margin-top: 3px;
+  border-radius: 3px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease-in-out;
+}
+
+.hidden-letter-sm {
+  background: #321b47;
+  border: 1px solid rgba(255, 202, 39, 0.35);
+}
+
+.reveal-letter-sm {
+  background: #ffca27;
+  color: #241b44;
+  animation: reveal 0.3s linear 1;
+}
+
+.space-letter-sm {
+  display: inline-block;
+  width: 6px;
+}
+/* ─────────────────────────────────────────────────────────────────────────── */
+
 .yellow-header {
   background: #ffca27;
   height: 80px;

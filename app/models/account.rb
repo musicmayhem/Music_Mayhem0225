@@ -85,24 +85,49 @@ class Account < ApplicationRecord
   end
 
   def self.from_omniauth(auth)
-    where(email: auth.info.email).first_or_initialize.tap do |user|
-      user.g_id = auth.uid.to_s
+    require 'open-uri'
+
+    # Look up by provider-specific ID first so that returning users are
+    # always matched correctly, even if they change their email.
+    account = case auth.provider
+              when 'facebook'     then find_by(fb_id: auth.uid)
+              when 'twitter'      then find_by(tw_id: auth.uid)
+              when 'google_oauth2' then find_by(g_id: auth.uid)
+              end
+
+    # Fall back to email match when we have one and no ID match exists yet.
+    if account.nil? && auth.info.email.present?
+      account = find_by(email: auth.info.email)
+    end
+
+    account ||= new
+
+    account.tap do |user|
+      # Store the provider-specific UID so future logins resolve instantly.
+      case auth.provider
+      when 'facebook'      then user.fb_id = auth.uid.to_s
+      when 'twitter'       then user.tw_id = auth.uid.to_s
+      when 'google_oauth2' then user.g_id  = auth.uid.to_s
+      end
+
       unless user.persisted?
         user.username = Api::V1::GuestusersController.guest_random_name
-        user.password = "password"
-        user.name = auth.info.name.blank? ? user.username : auth.info.name
-        user.email = auth.info.email.blank? ? user.username + '@fake_account.com' : auth.info.email
-        if auth.provider == "facebook"
-          user.logo = open(auth.info.image)
-        elsif auth.provider == "twitter"
-          user.logo = open(auth.info.image)
-        else
-          user.logo = auth.info.image
+        user.password = SecureRandom.hex(16)
+        user.name     = auth.info.name.presence || user.username
+        # Twitter may not supply an email — use a placeholder so validations pass.
+        user.email    = auth.info.email.presence ||
+                        "#{user.username}@oauth-noemail.musicmayhem.fake"
+
+        begin
+          user.logo = URI.open(auth.info.image) if auth.info.image.present?
+        rescue StandardError
+          # Avatar download is non-critical — skip silently on failure.
         end
-        user.invitation_token = auth.credentials.token
-        user.confirmed_at = DateTime.now
+
+        user.confirmed_at           = DateTime.now
         user.invitation_accepted_at = DateTime.now
       end
+
       user.save!
     end
   end

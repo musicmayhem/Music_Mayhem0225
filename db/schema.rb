@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_16_033445) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_17_123148) do
   create_schema "heroku_ext"
 
   # These are extensions that must be enabled in order to support this database
@@ -71,12 +71,16 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_16_033445) do
     t.hstore "user_era", default: {}
     t.hstore "user_genre", default: {}
     t.boolean "intro_redeemed"
+    t.string "fb_id"
+    t.string "tw_id"
     t.index ["confirmation_token"], name: "index_accounts_on_confirmation_token", unique: true
     t.index ["email"], name: "index_accounts_on_email", unique: true
+    t.index ["fb_id"], name: "index_accounts_on_fb_id"
     t.index ["invitation_token"], name: "index_accounts_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_accounts_on_invitations_count"
     t.index ["invited_by_id"], name: "index_accounts_on_invited_by_id"
     t.index ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true
+    t.index ["tw_id"], name: "index_accounts_on_tw_id"
   end
 
   create_table "active_admin_comments", id: :serial, force: :cascade do |t|
@@ -581,7 +585,6 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_16_033445) do
     t.boolean "active", default: true
     t.string "before_archive_path", limit: 255
     t.text "public_url"
-    t.string "question_type", default: "song"
     t.index ["path"], name: "index_songs_on_path"
   end
 

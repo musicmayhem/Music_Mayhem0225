@@ -244,6 +244,8 @@ module Api
             Pusher["games_#{@game.id}"].trigger('game_event', type: 'start_spin_wheel', data: { random_spin: params[:game][:random_spin]})
           when 'closeSpinWheel'
             Pusher["games_#{@game.id}"].trigger('game_event', type: 'close_spin_wheel')
+          when 'tile_reveal'
+            Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
           end
         else
           case params[:game][:status]
@@ -251,6 +253,8 @@ module Api
               MongoGame.create(game_id: @game.id, game_code: @game.code, session_id: @game.session_id, account_id: current_account&.id, action: 'Game Over', actor: current_account&.name)
               @game.update(state: 'Game Over')
               Pusher["games_#{@game.id}"].trigger(event_channel, { type: "game_ended", data: {remote: true,game: @game.as_json, leaderboard: @game.leaderboard.as_json(methods: [:total_score, :logo] ).take(5)}.as_json })
+            when 'tile_reveal'
+              Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
           end
         end
       end

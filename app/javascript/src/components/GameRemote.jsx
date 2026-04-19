@@ -114,7 +114,7 @@ class GameRemote extends React.Component {
     this.props.dispatch(
       actions.getRemoteData({
         game: { code: this.props.match.params.game_code },
-      })
+      }),
     );
     this.getGameleaderboard();
     this.getSongData();
@@ -127,7 +127,7 @@ class GameRemote extends React.Component {
         this.props.dispatch(
           actions.getRemoteData({
             game: { code: this.props.match.params.game_code },
-          })
+          }),
         );
     }
     if (this.state.runOnce && nextProps.game.game) {
@@ -190,7 +190,7 @@ class GameRemote extends React.Component {
       postRequest("games/skip_song_data", {
         type: GET_SONG_DATA,
         values: { game: { code: this.props.match.params.game_code } },
-      })
+      }),
     );
   }
 
@@ -214,7 +214,7 @@ class GameRemote extends React.Component {
           postRequest("games/reset_game", {
             type: RESET_GAME,
             values: { game: { code: this.props.match.params.game_code } },
-          })
+          }),
         );
         Swal.fire({
           icon: "success",
@@ -247,7 +247,7 @@ class GameRemote extends React.Component {
               status: "reloadGame",
             },
           },
-        })
+        }),
       );
     } else if (this.state.enableReload2 == true) {
       this.nextSongButton();
@@ -260,7 +260,7 @@ class GameRemote extends React.Component {
               status: "pageRefresh",
             },
           },
-        })
+        }),
       );
     }
   }
@@ -285,7 +285,7 @@ class GameRemote extends React.Component {
                 status: "gameOver",
               },
             },
-          })
+          }),
         );
         Swal.fire({
           icon: "success",
@@ -331,7 +331,7 @@ class GameRemote extends React.Component {
             wheel_type: wheelType,
           },
         },
-      })
+      }),
     );
     Swal.fire({
       title: "MAYHEM SPINNER",
@@ -354,7 +354,7 @@ class GameRemote extends React.Component {
                 random_spin: randomSpin,
               },
             },
-          })
+          }),
         );
         Swal.fire({
           icon: "success",
@@ -372,7 +372,7 @@ class GameRemote extends React.Component {
                 status: "closeSpinWheel",
               },
             },
-          })
+          }),
         );
       }
     });
@@ -383,7 +383,7 @@ class GameRemote extends React.Component {
       actions.sendVolumePusherRequest({
         game: { code: this.props.match.params.game_code },
         volume: p,
-      })
+      }),
     );
   }
 
@@ -391,7 +391,7 @@ class GameRemote extends React.Component {
     this.props.dispatch(
       actions.advanceSongInGame({
         game: { code: this.props.match.params.game_code },
-      })
+      }),
     );
     Swal.fire({
       title: "Advancing song",
@@ -406,7 +406,7 @@ class GameRemote extends React.Component {
     this.props.dispatch(
       actions.skipAndAddSongCurrentGame({
         game: { code: this.props.match.params.game_code },
-      })
+      }),
     );
   }
 
@@ -421,8 +421,8 @@ class GameRemote extends React.Component {
             songId: song_id,
           },
         },
-        true
-      )
+        true,
+      ),
     );
   }
 
@@ -436,7 +436,7 @@ class GameRemote extends React.Component {
         switch (data.type) {
           case "active_song":
             this.setState({
-              pusherCurrentSongCount: data.song_count,
+              pusherCurrentSongCount: data.data.song_count_display,
               showProgressBar: true,
               songDuration: this.state.songDuration
                 ? Date.now() + this.state.songDuration
@@ -467,12 +467,12 @@ class GameRemote extends React.Component {
                 enableCurrentSongSkip: true,
                 enableReload: true,
                 enableReload2: false,
-                pusherCurrentSongCount: data.data.song_of_songs_count,
+                pusherCurrentSongCount: data.data.song_of_songs_round_count,
               });
               this.props.dispatch(
                 actions.getRemoteData({
                   game: { code: this.props.match.params.game_code },
-                })
+                }),
               );
             }, 5000);
             break;
@@ -515,7 +515,7 @@ class GameRemote extends React.Component {
               this.noticeAlert(
                 "⚙️ Only " +
                   `${data.remaining_song_count}` +
-                  " songs left in the playlist to skip!"
+                  " songs left in the playlist to skip!",
               );
             break;
           case "campaign_updated":
@@ -529,7 +529,7 @@ class GameRemote extends React.Component {
             break;
           case "score_tied":
             this.noticeAlert(
-              "⚙️ " + data.data.status + " Score Tied Between Players."
+              "⚙️ " + data.data.status + " Score Tied Between Players.",
             );
             break;
           case "rewards_updated":
@@ -538,11 +538,11 @@ class GameRemote extends React.Component {
                 this.props.game &&
                 this.props.game.songWinners &&
                 this.props.game.songWinners.filter(
-                  (x) => x.account_id === data.account_id
+                  (x) => x.account_id === data.account_id,
                 )[0];
               if (winner)
                 this.noticeAlert(
-                  "⚙️ " + winner.name + " got 11 tickets for score 111."
+                  "⚙️ " + winner.name + " got 11 tickets for score 111.",
                 );
             }
             break;
@@ -553,12 +553,12 @@ class GameRemote extends React.Component {
                   data.data.message_from +
                   " : " +
                   data.data.message +
-                  " "
+                  " ",
               );
             break;
           case "pick_redeemed":
             this.noticeAlert(
-              "⚙️ " + data.player_name + " used pick " + data.pick_type
+              "⚙️ " + data.player_name + " used pick " + data.pick_type,
             );
             break;
         }
@@ -584,7 +584,7 @@ class GameRemote extends React.Component {
       postRequest("games/game_leaderboard", {
         type: GAME_LEADERBOARD,
         values: { game: { code: this.props.match.params.game_code } },
-      })
+      }),
     );
   }
 
@@ -601,7 +601,7 @@ class GameRemote extends React.Component {
             this.noticeAlert(
               "⚙️ PICK USED!" +
                 `${data.data}` +
-                " is picking the next playlist!"
+                " is picking the next playlist!",
             );
             break;
           case "player_muted":
@@ -609,7 +609,7 @@ class GameRemote extends React.Component {
               "🔇 PICK USED! " +
                 `${data.current_account}` +
                 " muted " +
-                `${data.muted_player}`
+                `${data.muted_player}`,
             );
             break;
         }
@@ -635,7 +635,7 @@ class GameRemote extends React.Component {
       if (result.value) {
         this.setState({ nextRound: true });
         this.props.dispatch(
-          addNewRound({ game: { code: this.props.match.params.game_code } })
+          addNewRound({ game: { code: this.props.match.params.game_code } }),
         );
         Swal.fire({
           icon: "success",
@@ -655,7 +655,7 @@ class GameRemote extends React.Component {
         values: {
           game: { code: this.props.match.params.game_code, status: event },
         },
-      })
+      }),
     );
   };
 
@@ -786,7 +786,7 @@ class GameRemote extends React.Component {
             code: this.props.match.params.game_code,
             role: "host",
           },
-        })
+        }),
       );
     }
   };
@@ -797,7 +797,7 @@ class GameRemote extends React.Component {
       .dispatch(
         instantRequest("games/player_answers", {
           values: { game: { code: this.props.match.params.game_code } },
-        })
+        }),
       )
       .then((res) => {
         if (res) {
@@ -813,7 +813,7 @@ class GameRemote extends React.Component {
       .dispatch(
         instantRequest("games/trivia_ticket_score", {
           values: { game: { code: this.props.match.params.game_code } },
-        })
+        }),
       )
       .then((res) => {
         if (res) {
@@ -835,7 +835,7 @@ class GameRemote extends React.Component {
       postRequest("player/gift_tickets", {
         type: GIFT_TICKETS,
         values: { ticket: { game_id: val.game_id, player_id: val.player_id } },
-      })
+      }),
     );
   };
 
@@ -855,13 +855,13 @@ class GameRemote extends React.Component {
         this.props.dispatch(
           postRequest("games/update_setting", {
             values: { game: { code: this.props.match.params.game_code } },
-          })
+          }),
         );
         this.props.dispatch(
           postRequest("games/update_appliance", {
             type: UPDATE_APPLIANCE,
             values: { game: { code: this.props.match.params.game_code } },
-          })
+          }),
         );
         window.location = "/config/" + this.props.match.params.game_code;
       }
@@ -872,7 +872,7 @@ class GameRemote extends React.Component {
     redirectWindow = window.open(
       "/vdemo",
       "_blank",
-      "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=9999, height=9999"
+      "directories=no,titlebar=no,toolbar=no,location=no,status=no,menubar=no,scrollbars=no,resizable=no,width=9999, height=9999",
     );
   };
 
@@ -993,7 +993,7 @@ class GameRemote extends React.Component {
                       this.props.game &&
                         this.props.game.rounds &&
                         this.props.game.rounds.settings &&
-                        this.props.game.rounds.settings.song_play_time
+                        this.props.game.rounds.settings.song_play_time,
                     )}
                   />
                 )}
@@ -1021,7 +1021,7 @@ class GameRemote extends React.Component {
                           values: {
                             game: { code: this.props.match.params.game_code },
                           },
-                        })
+                        }),
                       );
                     }}
                   >
@@ -1103,8 +1103,8 @@ class GameRemote extends React.Component {
                         className="mayhem-btn-yellow"
                         style={{ width: "100%" }}
                         onClick={() => {
-                          const paused = !this.state.revealPaused
-                          this.setState({ revealPaused: paused })
+                          const paused = !this.state.revealPaused;
+                          this.setState({ revealPaused: paused });
                           this.props.dispatch(
                             postRequest("games/pusher_update", {
                               values: {
@@ -1113,11 +1113,13 @@ class GameRemote extends React.Component {
                                   status: "toggle_reveal",
                                 },
                               },
-                            })
-                          )
+                            }),
+                          );
                         }}
                       >
-                        {this.state.revealPaused ? "RESUME REVEAL" : "PAUSE REVEAL"}
+                        {this.state.revealPaused
+                          ? "RESUME REVEAL"
+                          : "PAUSE REVEAL"}
                       </Button>
                     )}
                   </Col>
@@ -1475,7 +1477,7 @@ class GameRemote extends React.Component {
                           values: {
                             game: { code: this.props.match.params.game_code },
                           },
-                        })
+                        }),
                       );
                     }}
                   >
@@ -1675,7 +1677,7 @@ class GameRemote extends React.Component {
                                 code: this.props.match.params.game_code,
                                 round_mode: "multi",
                               },
-                            })
+                            }),
                           );
                         }}
                       >
@@ -1790,7 +1792,7 @@ class GameRemote extends React.Component {
                               code: this.props.match.params.game_code,
                               round_mode: "multi",
                             },
-                          })
+                          }),
                         );
                       }}
                     >
@@ -1933,8 +1935,8 @@ class GameRemote extends React.Component {
                                     x[1][j - 1].question_number
                                     ? y.question_number + "."
                                     : j == 0
-                                    ? y.question_number + "."
-                                    : " "}
+                                      ? y.question_number + "."
+                                      : " "}
                                 </p>
                               </Col>
                               <Col

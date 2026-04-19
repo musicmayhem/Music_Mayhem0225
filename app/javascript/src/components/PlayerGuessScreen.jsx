@@ -15,6 +15,7 @@ import { INTERJECTION } from '../components/helper'
 import 'react-toastify/dist/ReactToastify.css'
 import { resetState } from '../actions/guessCheckerActions'
 import AdSense from 'react-adsense';
+import PlayerRevealTiles from './PlayerRevealTiles'
 
 const validate = values => {
   const errors = { guess: {} }
@@ -325,9 +326,9 @@ class UserGuess extends React.Component {
 
   render() {
     const { reward, redeemed, guessedValue } = this.state
-    const { handleSubmit, player_status, current_session } = this.props
+    const { handleSubmit, player_status, current_session, visibleTitle, visibleArtist } = this.props
     const { playerGuessing } = this.props.guess
-    const { show_year_hint } = this.props.game
+    const { show_year_hint, show_title_hint, show_artist_hint } = this.props.game
     const total_score = this.props.guess.total_score ? this.props.guess.total_score : 0
     const title_score =
       this.props.guess.guessData && this.props.guess.guessData ? this.props.guess.guessData.title_score : 0
@@ -341,6 +342,14 @@ class UserGuess extends React.Component {
     const canGuess = (show_year_hint && (artist_score == 0 || year_score == 0)) || (!show_year_hint && (artist_score == 0 || title_score == 0))
     return (
       <div style={{ position: 'relative', paddingTop: player_status == 'muted' ? '100px' : '0px' }}>
+        {visibleTitle && (
+          <PlayerRevealTiles
+            visibleTitle={visibleTitle}
+            visibleArtist={visibleArtist}
+            showTitleHint={show_title_hint}
+            showArtistHint={show_artist_hint}
+          />
+        )}
         {this.props.player_status == 'muted' && this.props.song_status == true && (
           <div id="closeButton" className="yellow-header" style={{ marginBottom: 0 }}>
             <b>🔇 WOO! You're muted! You will get only half of the points for this song guesses!</b>

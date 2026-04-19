@@ -84,6 +84,15 @@ Rails.application.routes.draw do
   get '/admin/videos/:id/end' => 'api/v1/videos#end', as: :admin_video_end
   get '/admin/videos/:id/delete_image' => 'api/v1/videos#destroy_image', as: :admin_video_image_delete
   patch '/admin/stripe_sandbox_switch' => 'charges#stripe_sandbox_switch', as: :admin_stripe_sandbox_switch
+  # Social auth entry points — Login.jsx buttons point to /fb and /twitter
+  get '/fb'      => redirect('/auth/facebook')
+  get '/twitter' => redirect('/auth/twitter')
+
+  # OmniAuth provider callbacks — must be before the catch-all below
+  get '/auth/facebook/callback' => 'omniauth_callbacks#facebook'
+  get '/auth/twitter/callback'  => 'omniauth_callbacks#twitter'
+  get '/auth/failure'           => 'omniauth_callbacks#failure'
+
   get '*path', to: 'homepage#index'
   post '*path', to: 'homepage#index'
   post '/', to: 'homepage#index'

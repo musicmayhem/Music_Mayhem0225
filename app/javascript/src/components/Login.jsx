@@ -54,6 +54,19 @@ class Login extends React.Component {
   }
 
   UNSAFE_componentWillMount() {
+    // Show error toast if redirected back from a failed OAuth attempt.
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('error') === 'auth_failed') {
+      Swal.fire({
+        type: 'error',
+        title: 'Sign in failed',
+        text: 'Could not sign in with that social account. Please try again.',
+        showConfirmButton: false,
+        timer: 2500,
+      })
+      window.history.replaceState({}, '', '/login')
+    }
+
     this.props.checkUserIsLogin().then(res => {
       if (!res) {
         this.props.history.push('/login')

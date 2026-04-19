@@ -97,6 +97,7 @@ gem 'psych'
 gem 'kaminari-mongoid'
 
 gem 'rack-cors'
+# gem 'dotenv-rails', groups: [:development, :test]
 
 gem 'devise-jwt'
 gem 'jsonapi-serializer'

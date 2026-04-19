@@ -93,7 +93,7 @@ class Game < ApplicationRecord
     super.merge({'song_of_songs_count' => song_of_songs_count, 'mode' => mode,'current_song_count' => current_song_count})
   end
   def as_json(options = {})
-    super(options).merge('song_of_songs_count': song_of_songs_count, 'mode': mode,'current_song_count': current_song_count)
+    super(options).merge('song_of_songs_count': song_of_songs_count, 'song_count_display': song_of_songs_round_count, 'mode': mode,'current_song_count': current_song_count)
   end
 
   def current_session
@@ -385,6 +385,12 @@ class Game < ApplicationRecord
 
   def song_of_songs_count
     not_skipped_song.count.zero? ? "Song 1 / #{song_countz}" : "Song #{not_skipped_song.count} / #{song_countz}"
+  end
+
+  def song_of_songs_round_count
+    round_played = song_plays.where(round_id: current_round_id, skip_song: false).count
+    round_total = current_round&.song_count.to_i
+    round_played.zero? ? "Song 1 / #{round_total}" : "Song #{round_played} / #{round_total}"
   end
 
   def not_skipped_song

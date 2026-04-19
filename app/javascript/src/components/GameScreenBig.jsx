@@ -22,6 +22,8 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
   // Wall-clock timestamp after which tile reveals are allowed.
   // Set when audio starts; accounts for letterStartTime offset.
   const revealAllowedAtRef = useRef(null)
+  // Throttle tile-reveal broadcasts to players — at most once per second.
+  const broadcastThrottleRef = useRef(0)
 
   const songPlayTime =
     game.songPlayTime == 0
@@ -146,13 +148,30 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
 
   // Instantly reveals all remaining tiles — called on guessEnd so the
   // answer is always visible by the time the leaderboard/reveal screen appears.
+  // Also broadcasts the fully-revealed state to players immediately.
   const revealAllRemaining = useCallback(() => {
     titleSeqRef.current = []
     artistSeqRef.current = []
-    setVisibleSongName(buildFullRevealArray(game.songName))
-    setVisibleArtistName(buildFullRevealArray(game.artist))
+    const fullTitle = buildFullRevealArray(game.songName)
+    const fullArtist = buildFullRevealArray(game.artist)
+    setVisibleSongName(fullTitle)
+    setVisibleArtistName(fullArtist)
     setAllTilesRevealed(true)
-  }, [game.songName, game.artist]) // eslint-disable-line react-hooks/exhaustive-deps
+    if (!mirror) {
+      // Update throttle ref so the broadcast effect below doesn't double-fire.
+      broadcastThrottleRef.current = Date.now()
+      onPostRequest('games/pusher_update', {
+        values: {
+          game: {
+            code: game.gameCode,
+            status: 'tile_reveal',
+            visible_title: fullTitle,
+            visible_artist: fullArtist,
+          },
+        },
+      })
+    }
+  }, [game.songName, game.artist, game.gameCode, mirror, onPostRequest]) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Fires once when the guess window closes
   const handleGuessEnd = useCallback(() => {
@@ -246,6 +265,26 @@ export const GameScreenBig = ({ game, mirror, demo, onSetActiveSong, onPostReque
       clearInterval(revealIntervalId)
     }
   }, [isPlaying, allTilesRevealed, game.revealPaused, updateTiles])
+
+  // Broadcast current visible tile state to the game channel (throttled to 1/sec).
+  // Fires whenever a tile is revealed; revealAllRemaining sets broadcastThrottleRef
+  // directly so the full-reveal broadcast is never swallowed by the throttle.
+  useEffect(() => {
+    if (mirror || !isPlaying) return
+    const now = Date.now()
+    if (now - broadcastThrottleRef.current < 1000) return
+    broadcastThrottleRef.current = now
+    onPostRequest('games/pusher_update', {
+      values: {
+        game: {
+          code: game.gameCode,
+          status: 'tile_reveal',
+          visible_title: visibleSongName,
+          visible_artist: visibleArtistName,
+        },
+      },
+    })
+  }, [visibleSongName, visibleArtistName]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const startAudio = () => {
     const player = document.getElementById('songPlayer')
