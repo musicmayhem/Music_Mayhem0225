@@ -5,6 +5,40 @@ import { connect } from 'react-redux'
 import { updateGameRequest, addNewRound } from '../actions/hostGameActions'
 import { postRequest } from '../actions/gameAction'
 import { songFadeOut } from '../components/helper'
+import ReactHtmlParser from 'react-html-parser'
+
+const buildFullRevealArray = (string) =>
+  string.split('').map((char) => (char === ' ' ? '^' : char))
+
+const makeWords = (strings) => {
+  var newString = []
+  strings.forEach((s, i) => {
+    var div = document.createElement('DIV')
+    div.innerHTML = s
+    if (i === -1) {
+      newString.push('<div class="word-break">')
+      newString.push(s)
+    }
+    if (div.firstChild.classList.contains('space-letter-big') && i !== strings.length - 1)
+      newString.push('</div><div class="word-break">')
+    else if (i === strings.length - 1) newString.push('</div>')
+    else newString.push(s)
+  })
+  return newString.join('')
+}
+
+const renderTiles = (hashString) => {
+  let letters = hashString.map((char, key) => {
+    if (char === '#')
+      return `<div key=${key} class='letter-big hidden-letter-big'></div>`
+    else if (char === '^')
+      return `<div key=${key} class='letter-big space-letter-big'></div>`
+    else
+      return `<div key=${key} class='letter-big reveal-letter-big'>${char}</div>`
+  })
+  letters.push(`<div key=${hashString.length} class='letter-big space-letter-big'></div>`)
+  return <div>{ReactHtmlParser(makeWords(letters))}</div>
+}
 
 // Shown in place of the leaderboard when show_scoreboard is false.
 // Displays the fully revealed song title and artist, then auto-advances
@@ -18,6 +52,8 @@ const FinalRevealScreen = ({
   loadedSong,
   songCount,
   game_code_display,
+  show_title_hint,
+  show_artist_hint,
   // from Redux state
   game,
   // dispatched actions
@@ -60,6 +96,8 @@ const FinalRevealScreen = ({
   }, [automaticSongAdvance, displayTime, sendNextEvent])
 
   const { title, artist } = loadedSong
+  const titleTiles = buildFullRevealArray(title)
+  const artistTiles = buildFullRevealArray(artist)
 
   return (
     <div style={{ color: '#fff' }}>
@@ -87,38 +125,50 @@ const FinalRevealScreen = ({
         </Col>
       </Row>
 
-      <div style={{ padding: '3rem 2rem', textAlign: 'center' }}>
-        <h2 style={{ fontWeight: '600', color: '#ffca27', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-          SONG TITLE
-        </h2>
-        <h1
-          style={{
-            fontWeight: '900',
-            fontSize: '6vmax',
-            color: '#fff',
-            textTransform: 'uppercase',
-            marginBottom: '3rem',
-            marginTop: '0.5rem',
-          }}
-        >
-          {title}
-        </h1>
+      {show_title_hint && (
+        <div style={{ padding: '2rem 2rem' }}>
+          <div>
+            <h2 style={{ fontWeight: '600', textAlign: 'center', color: '#ffca27' }}>
+              SONG TITLE
+            </h2>
+          </div>
+          <Row center="xs">
+            <Col xs={12} style={{ perspective: '800px' }}>
+              {renderTiles(titleTiles)}
+            </Col>
+          </Row>
+        </div>
+      )}
 
-        <h2 style={{ fontWeight: '600', color: '#ffca27', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-          ARTIST
-        </h2>
-        <h1
-          style={{
-            fontWeight: '900',
-            fontSize: '5vmax',
-            color: '#fff',
-            textTransform: 'uppercase',
-            marginTop: '0.5rem',
-          }}
-        >
-          {artist}
-        </h1>
-      </div>
+      {show_artist_hint && (
+        <div style={{ padding: '2rem 2rem' }}>
+          <div>
+            <h2 style={{ fontWeight: '600', textAlign: 'center', color: '#ffca27' }}>
+              ARTIST
+            </h2>
+          </div>
+          <Row center="xs">
+            <Col xs={12} style={{ perspective: '800px' }} className="tile-displayer">
+              {renderTiles(artistTiles)}
+            </Col>
+          </Row>
+        </div>
+      )}
+
+      {!show_title_hint && !show_artist_hint && (
+        <div style={{ padding: '4rem 4rem' }}>
+          <h2
+            style={{
+              fontWeight: '900',
+              textAlign: 'center',
+              color: '#ffca27',
+              fontSize: '10vmax',
+            }}
+          >
+            BLIND ROUND
+          </h2>
+        </div>
+      )}
 
       {/* Hidden button targeted by the advance_next_song pusher handler in MusicMayhemGame */}
       <button id="next-song-btn" onClick={sendNextEvent} style={{ display: 'none' }} />

@@ -246,6 +246,8 @@ module Api
             Pusher["games_#{@game.id}"].trigger('game_event', type: 'close_spin_wheel')
           when 'tile_reveal'
             Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
+          when 'toggle_reveal'
+            Pusher["games_#{@game.id}"].trigger('game_event', type: 'toggle_reveal')
           end
         else
           case params[:game][:status]
@@ -255,6 +257,8 @@ module Api
               Pusher["games_#{@game.id}"].trigger(event_channel, { type: "game_ended", data: {remote: true,game: @game.as_json, leaderboard: @game.leaderboard.as_json(methods: [:total_score, :logo] ).take(5)}.as_json })
             when 'tile_reveal'
               Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
+            when 'toggle_reveal'
+              Pusher["games_#{@game.id}"].trigger('game_event', type: 'toggle_reveal')
           end
         end
       end

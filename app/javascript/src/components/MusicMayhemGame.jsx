@@ -829,6 +829,8 @@ class MusicMayhemGame extends React.Component {
                       : this.props.game.game.song_of_songs_count
                   }
                   game_code_display={game.game.game_code_display}
+                  show_title_hint={game.game.show_title_hint}
+                  show_artist_hint={game.game.show_artist_hint}
                 />
               )}
             {beginGame &&

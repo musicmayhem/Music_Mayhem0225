@@ -321,6 +321,7 @@ class GameConfiguration extends React.Component {
         pause_game_screen: false,
         no_leader_board: false,
         display_song_count: true,
+        letter_start_time: 5,
       }
 
       if (this.state.sessionOption == 'new') {
@@ -1420,6 +1421,7 @@ export default connect(
           pause_game_screen: false,
           no_leader_board: false,
           display_song_count: true,
+          letter_start_time: 5,
         },
       },
     }

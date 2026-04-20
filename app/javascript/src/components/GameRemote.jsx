@@ -1098,7 +1098,7 @@ class GameRemote extends React.Component {
                 </Row>
                 <Row center="xs">
                   <Col xs={12} style={{ marginTop: "1rem" }}>
-                    {!this._autoAdvance && songCount != null && (
+                    {this._autoAdvance && songCount != null && (
                       <Button
                         className="mayhem-btn-yellow"
                         style={{ width: "100%" }}
