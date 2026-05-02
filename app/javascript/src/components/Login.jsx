@@ -6,8 +6,7 @@ import { Field, reduxForm } from 'redux-form'
 import { logInUser } from '../actions/loginActions'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
-import { postRequest } from '../actions/gameAction'
-import { RESEND_EMAIL_CONFIRMATION } from '../constants/authConstants'
+import { resendEmailConfirmation } from '../actions/registrationActions'
 import { checkUserIsLogin } from '../actions/loginActions'
 
 const validate = values => {
@@ -119,10 +118,7 @@ class Login extends React.Component {
       ])
       .then(result => {
         if (result.value) {
-          this.props.postRequest('player/resend_email_confirmation', {
-            type: RESEND_EMAIL_CONFIRMATION,
-            values: { email: result.value[0] },
-          })
+          this.props.resendEmailConfirmation(result.value[0])
         }
       })
   }
@@ -227,7 +223,7 @@ const mapDispatchToProps = dispatch => {
   return {
     logInUser: params => dispatch(logInUser(params)),
     checkUserIsLogin: () => dispatch(checkUserIsLogin()),
-    postRequest: (path, params) => dispatch(postRequest(path, params)),
+    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
   }
 }
 

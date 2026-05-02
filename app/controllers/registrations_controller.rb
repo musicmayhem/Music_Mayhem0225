@@ -1,5 +1,7 @@
 class RegistrationsController < Devise::RegistrationsController
 
+	OTP_EXPIRATION_TIME = 5.minutes.ago
+
 	before_action :configure_create_params, if: :devise_controller?
 	after_action :set_csrf_headers, only: [:create, :destroy]
 	protect_from_forgery :except => [:account_invite]
@@ -50,6 +52,23 @@ class RegistrationsController < Devise::RegistrationsController
     else
       render json: { error: 'username has already been taken' }, status: 300
     end
+  end
+
+	def verify_otp
+    @account = Account.find_by_email(params[:email])
+    if @account && @account.confirmation_token == params[:otp] && @account.confirmation_sent_at >= OTP_EXPIRATION_TIME
+      @account.update(confirmed_at: Time.now, confirmation_token: nil)
+      sign_in @account
+      render 'api/v1/players/verify_otp', status: :ok
+    else
+      render json: { error: 'Invalid OTP' }, status: :not_found
+    end
+  end
+
+  def resend_email_confirmation
+    account = Account.find_by_email(params[:email])
+    @player = account.resend_confirmation_instructions if account
+    render 'api/v1/players/resend_email_confirmation', status: :ok
   end
 
 	def resend_confirmation

@@ -4,24 +4,24 @@ import { connect } from "react-redux";
 import LoginForm from "./LoginForm";
 import RegistrationForm from "./RegistrationForm";
 import { logInUser, checkUserIsLogin } from "../actions/loginActions";
-import { createGuestUser } from "../actions/registrationActions";
+import { createGuestUser, resendEmailConfirmation } from "../actions/registrationActions";
 import { getGameData } from "../actions/hostGameActions";
 import Swal from "sweetalert2";
-import { postRequest, makeRequest } from "../actions/gameAction";
-import { RESEND_EMAIL_CONFIRMATION } from "../constants/authConstants";
+import { makeRequest } from "../actions/gameAction";
 import { GUEST_NAME } from "../constants/playerConstants";
 import Trophy from "../images/Trophy.svg";
 import ConfirmOtp from "./ConfirmOtp";
 
 class PlayGameAs extends React.Component {
   state = {
-    playAs: "user",
+    playAs: "quick",
     showOnce: true,
     creatGuestUser: false,
     guestCreated: false,
-    getGuestUsername: false,
+    getGuestUsername: true,
     guestNameGenerated: false,
     guestName: "",
+    quickName: "",
   };
 
   UNSAFE_componentWillMount() {
@@ -41,6 +41,9 @@ class PlayGameAs extends React.Component {
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.name && this.state.playAs === "quick" && !this.state.quickName) {
+      this.setState({ quickName: nextProps.auth.name });
+    }
     if (
       this.state.showOnce &&
       nextProps.auth &&
@@ -105,6 +108,16 @@ class PlayGameAs extends React.Component {
     this.props.createGuestUser(values);
   };
 
+  joinQuick = () => {
+    const name = this.state.quickName.trim();
+    if (!name) return;
+    this.props.createGuestUser({
+      guest: true,
+      name,
+      game_code: this.props.match.params.game_code,
+    });
+  };
+
   confirmEmail = () => {
     Swal.mixin({
       input: "email",
@@ -118,10 +131,7 @@ class PlayGameAs extends React.Component {
       ])
       .then((result) => {
         if (result.value) {
-          this.props.postRequest("player/resend_email_confirmation", {
-            type: RESEND_EMAIL_CONFIRMATION,
-            values: { email: result.value[0] },
-          });
+          this.props.resendEmailConfirmation(result.value[0]);
         }
       });
   };
@@ -160,6 +170,20 @@ class PlayGameAs extends React.Component {
                       <div
                         className="radio-round"
                         onClick={() => {
+                          this.setState({
+                            playAs: "quick",
+                            quickName: this.props.auth.name || "",
+                            getGuestUsername: !this.props.auth.name,
+                            guestNameGenerated: !!this.props.auth.name,
+                          });
+                        }}
+                      >
+                        <div>{this.state.playAs === "quick" && <div />}</div>
+                        <label>JUST TAKE ME TO THE GAME</label>
+                      </div>
+                      <div
+                        className="radio-round"
+                        onClick={() => {
                           this.setState({ playAs: "user" });
                         }}
                       >
@@ -176,6 +200,30 @@ class PlayGameAs extends React.Component {
                         <label>CREATE FREE ACCOUNT</label>
                       </div>
                     </FormGroup>
+                    {this.state.playAs === "quick" && (
+                      <div>
+                        <div className="custom-form-field-w-label">
+                          <label style={{ color: "#fff", marginBottom: "0.4rem", display: "block", fontSize: "0.85rem" }}>
+                            DESIRED USERNAME
+                          </label>
+                          <input
+                            type="text"
+                            className="form-control"
+                            value={this.state.quickName}
+                            onChange={(e) => this.setState({ quickName: e.target.value })}
+                            placeholder={this.props.auth.name || "Loading..."}
+                          />
+                        </div>
+                        <button
+                          className="btn mayhem-btn-yellow btn-block"
+                          style={{ marginTop: "1rem", fontWeight: "600" }}
+                          disabled={!this.state.quickName.trim() || this.props.auth.creatingAccount}
+                          onClick={this.joinQuick}
+                        >
+                          {this.props.auth.creatingAccount ? "JOINING..." : "CONTINUE"}
+                        </button>
+                      </div>
+                    )}
                     {this.state.playAs === "user" && (
                       <LoginForm
                         loginValues={this.loginValues}
@@ -267,7 +315,7 @@ const mapDispatchToProps = (dispatch) => {
     createGuestUser: (params) => dispatch(createGuestUser(params)),
     checkUserIsLogin: (params) => dispatch(checkUserIsLogin(params)),
     getGameData: (params) => dispatch(getGameData(params)),
-    postRequest: (path, params) => dispatch(postRequest(path, params)),
+    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
     makeRequest: (path, params) => dispatch(makeRequest(path, params)),
   };
 };

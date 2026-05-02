@@ -3,6 +3,10 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   # devise_for :accounts
   devise_for :accounts, defaults: { format: :json }, controllers: { registrations: "registrations", sessions: "sessions", passwords: "passwords",confirmations: "confirmations", invitations: "invitations"}
+  devise_scope :account do
+    post 'accounts/verify_otp', to: 'registrations#verify_otp'
+    post 'accounts/resend_email_confirmation', to: 'registrations#resend_email_confirmation'
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -49,9 +53,9 @@ Rails.application.routes.draw do
       resource :player do
         get :players_game, :get_random_name, :series_score, :songs_played
         post :rewards, :send_email_to_players, :check_player_present, :find_scores, :check_player_present_in_last_game,
-             :get_demo_data, :resend_email_confirmation, :send_host_answer, :set_playlist, :host_playlists, :redeem_ticket,
+             :get_demo_data, :send_host_answer, :set_playlist, :host_playlists, :redeem_ticket,
              :winner_ticket, :tickets, :send_rewards, :redeem_pick, :unmute_player,:redeem_spiff,:gift_tickets,
-             :total_score, :check_player_name, :update_players_picks, :verify_otp
+             :total_score, :check_player_name, :update_players_picks
       end
 
       resource :pages do

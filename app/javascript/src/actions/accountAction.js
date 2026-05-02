@@ -106,7 +106,7 @@ export const confirmOtp = (formParams) => {
       ).content;
 
       return axios
-        .post("/api/v1/player/verify_otp", formParams)
+        .post("/accounts/verify_otp", formParams)
         .then((response) => {
           axios.defaults.headers.common["X-CSRF-Token"] =
             response.headers["csrf-token"];

@@ -97,15 +97,6 @@ class RegistrationForm extends React.Component {
               <i>We do not sell or share any personal info.</i>
             </p>
           </div>
-          <div style={{ margin: '1rem', textAlign: 'center' }} className="pink-link">
-            <a
-              onClick={() => {
-                this.joinGame(guest_name)
-              }}
-            >
-              JUST TAKE ME TO THE GAME
-            </a>
-          </div>
         </Col>
       </form>
     )

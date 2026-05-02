@@ -126,24 +126,6 @@ module Api
         @games_played = current_account.games_played
       end
 
-      def resend_email_confirmation
-       account = Account.find_by_email(params[:email])
-       @player = account.resend_confirmation_instructions if account
-      end
-      
-      def verify_otp
-        @account = Account.find_by_email(params[:email])
-        print @account.id
-        if @account && @account.confirmation_token == params[:otp] && @account.confirmation_sent_at >= OTP_EXPIRATION_TIME
-          @account.confirm
-          @account.update(confirmation_token: nil)
-          sign_in @account
-          render 'api/v1/players/verify_otp', status: :ok
-        else
-          render json: { error: 'Invalid OTP' }, status: :not_found
-        end
-      end
-      
       def send_email_to_players
         return nil if !current_account.host?
         series = ScoreTable.where(series_id: params[:series])

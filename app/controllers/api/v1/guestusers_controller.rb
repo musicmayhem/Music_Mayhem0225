@@ -26,6 +26,10 @@ module Api
 
         if params[:guest]
           guest_name = params[:name] || GuestusersController.guest_random_name
+          if Account.find_by_username(guest_name)
+            render json: { error: 'Username already taken' }, status: 300
+            return
+          end
           @account = Account.new(
             name: guest_name,
             email: guest_name + '@fake_account.com',
@@ -55,14 +59,23 @@ module Api
         end
         return nil unless @account
 
-        @account.skip_confirmation_notification!
-        if @account.save
-          @account.send_confirmation_instructions
-          sign_in @account
+        if params[:guest]
+          @account.skip_confirmation!
+          if @account.save
+            sign_in @account
+          else
+            render json: { errors: @account.errors }, status: 403
+          end
         else
-          acc = Account.find_by_email(params[:account][:email]) if params[:account] && params[:account][:email]
-          acc&.resend_confirmation_instructions
-          render json: { errors: @account.errors }, status: 403
+          @account.skip_confirmation_notification!
+          if @account.save
+            @account.send_confirmation_instructions
+            sign_in @account
+          else
+            acc = Account.find_by_email(params[:account][:email]) if params[:account] && params[:account][:email]
+            acc&.resend_confirmation_instructions
+            render json: { errors: @account.errors }, status: 403
+          end
         end
       end
 

@@ -1,8 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { confirmOtp } from "../actions/accountAction";
-import { RESEND_EMAIL_CONFIRMATION } from "../constants/authConstants";
-import { postRequest } from "../actions/gameAction";
+import { resendEmailConfirmation } from "../actions/registrationActions";
 
 // CSS styles for the component
 const styles = {
@@ -243,10 +242,7 @@ class ConfirmOtp extends React.Component {
   };
 
   resendOTP = () => {
-    this.props.postRequest("player/resend_email_confirmation", {
-      type: RESEND_EMAIL_CONFIRMATION,
-      values: { email: this.props.auth.data.account.email },
-    });
+    this.props.resendEmailConfirmation(this.props.auth.data.account.email);
     this.setState(
       {
         otp: new Array(4).fill(""),
@@ -266,8 +262,15 @@ class ConfirmOtp extends React.Component {
 
   playGame() {
     localStorage.removeItem("temp_user");
-    // this.props.history.push("/player/" + this.props.match.params.game_code);
-    window.location.href = `/player/${this.props.game.game.code}`;
+    if (typeof this.props.playGame === "function") {
+      this.props.playGame();
+    } else {
+      const gameCode =
+        this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.gameCode;
+      window.location.href = gameCode ? `/player/${gameCode}` : "/";
+    }
   }
 
   render() {
@@ -358,7 +361,7 @@ class ConfirmOtp extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     confirmOtp: (params) => dispatch(confirmOtp(params)),
-    postRequest: (path, params) => dispatch(postRequest(path, params)),
+    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
   };
 };
 export default connect((state) => {
