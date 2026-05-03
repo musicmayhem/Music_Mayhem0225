@@ -35,15 +35,12 @@ class RegistrationsController < Devise::RegistrationsController
     a = Account.find_by_username(params[:account][:username]) if params[:account] && params[:account][:username]
     if !a
       build_resource(sign_up_params)
+      resource.skip_confirmation!
       resource.save
       if resource.persisted?
-        if resource.active_for_authentication?
-          sign_in(resource_name, resource)
-          render json: resource, status: :created
-        else
-          expire_data_after_sign_in!
-          render json: { message: "Signed up but #{resource.inactive_message}" }, status: :ok
-        end
+        resource.send_confirmation_instructions
+        sign_in(resource_name, resource)
+        render json: resource, status: :created
       else
         clean_up_passwords resource
         set_minimum_password_length
@@ -67,8 +64,18 @@ class RegistrationsController < Devise::RegistrationsController
 
   def resend_email_confirmation
     account = Account.find_by_email(params[:email])
-    @player = account.resend_confirmation_instructions if account
-    render 'api/v1/players/resend_email_confirmation', status: :ok
+    account.send_confirmation_instructions if account
+    render json: { success: true }, status: :ok
+  end
+
+  def update_email
+    if current_account
+      current_account.update_columns(email: params[:email], confirmed_at: nil, confirmation_token: nil, confirmation_sent_at: nil)
+      current_account.send_confirmation_instructions
+      render json: { success: true }, status: :ok
+    else
+      render json: { error: 'Not logged in' }, status: :unauthorized
+    end
   end
 
 	def resend_confirmation

@@ -8,8 +8,18 @@ import {
   CREATE_GAME_FROM_HEADER,
 } from "../constants/gameConstants";
 import { Link } from "react-router-dom";
+import { resendEmailConfirmation, updateEmailAndSendOtp } from "../actions/registrationActions";
+import Swal from "sweetalert2";
+
 let gameWindow = null;
 let redirectWindow = null;
+
+const maskEmail = (email) => {
+  if (!email) return "";
+  const [local, domain] = email.split("@");
+  return local.slice(0, 2) + "****@" + domain;
+};
+
 class Example extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +41,6 @@ class Example extends React.Component {
       this.setState({ showLiveGiftOption: true });
     else if (url.includes("/remote"))
       this.setState({ showLiveGiftOption: true });
-    else if (url.includes("/slot/")) this.setState({ showHeader: false });
     else if (url.includes("/slot/")) this.setState({ showHeader: false });
     else if (url.includes("/mirror/")) this.setState({ showHeader: false });
     else this.setState({ showHeader: true });
@@ -84,9 +93,9 @@ class Example extends React.Component {
 
   handleOutsideClick(e) {
     if (this.node && this.node.contains && this.node.contains(e.target)) return;
-
     this.handleClick();
   }
+
   logoutUser = () => {
     localStorage.removeItem("indexImg");
     localStorage.removeItem("game_config_updated");
@@ -149,8 +158,44 @@ class Example extends React.Component {
     });
   }
 
+  handleConfirmEmail = () => {
+    const account = this.props.auth.currentAccount;
+    if (!account) return;
+
+    const isGuest =
+      account.email && account.email.includes("@fake_account.com");
+
+    if (isGuest) {
+      Swal.fire({
+        title: "Add your email",
+        input: "email",
+        inputLabel: "Enter your email address to receive a confirmation code",
+        inputPlaceholder: "you@example.com",
+        confirmButtonText: "Send Code",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.value) {
+          const email = result.value;
+          this.props.updateEmailAndSendOtp(email).then(() => {
+            this.props.history.push("/confirm-otp", { email });
+          });
+        }
+      });
+    } else {
+      const email = account.email;
+      this.props.resendEmailConfirmation(email).then(() => {
+        this.props.history.push("/confirm-otp", { email });
+      });
+    }
+  };
+
   render() {
     const { showLiveGiftOption } = this.state;
+    const account = this.props.auth.currentAccount;
+    const needsConfirmation =
+      account &&
+      (account.email.includes("@fake_account.com") || !!account.confirmation_token);
+
     return (
       <div style={{ display: this.state.showHeader ? "" : "none" }}>
         <div
@@ -162,17 +207,35 @@ class Example extends React.Component {
           <Link to="/">
             <div className="nav-bar-logo" />
           </Link>
-          <div
-            onClick={this.handleClick}
-            className={
-              this.state.isOpen
-                ? "nav-bar-hamburger nav-bar-hamburger__open"
-                : "nav-bar-hamburger"
-            }
-          >
-            <div />
-            <div />
-            <div />
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {needsConfirmation && (
+              <span
+                title="Email not confirmed"
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  borderRadius: "50%",
+                  backgroundColor: "#f59e0b",
+                  display: "inline-block",
+                  marginRight: "8px",
+                  cursor: "pointer",
+                  flexShrink: 0,
+                }}
+                onClick={this.handleConfirmEmail}
+              />
+            )}
+            <div
+              onClick={this.handleClick}
+              className={
+                this.state.isOpen
+                  ? "nav-bar-hamburger nav-bar-hamburger__open"
+                  : "nav-bar-hamburger"
+              }
+            >
+              <div />
+              <div />
+              <div />
+            </div>
           </div>
         </div>
         <div
@@ -203,13 +266,7 @@ class Example extends React.Component {
             <Link to="/index">Join Existing Game</Link>
             {this.props.auth && this.props.auth.accountLoggedIn && (
               <div>
-                <a
-                  onClick={() => {
-                    this.createHostedGame();
-                  }}
-                >
-                  Launch New Game
-                </a>
+                <a onClick={() => this.createHostedGame()}>Launch New Game</a>
                 {this.props.auth.currentAccount &&
                   this.props.auth.currentAccount.role &&
                   this.props.auth.currentAccount.role == "host" && (
@@ -222,16 +279,17 @@ class Example extends React.Component {
                   )}
                 <Link to="/career">My Mayhem Career</Link>
                 <Link to="/accounts/setting">My Account</Link>
-                {/* <a href="/buy_plan">My Subscription</a> */}
+                {needsConfirmation && (
+                  <a
+                    onClick={this.handleConfirmEmail}
+                    style={{ color: "#f59e0b" }}
+                  >
+                    ⚠ Confirm Email
+                  </a>
+                )}
               </div>
             )}
-            <a
-              onClick={() => {
-                this.startDemoGame();
-              }}
-            >
-              solo play/demo
-            </a>
+            <a onClick={() => this.startDemoGame()}>solo play/demo</a>
             <Link to="/help">Help/Feedback</Link>
             {this.props.auth.currentAccount &&
               this.props.auth.currentAccount.role &&
@@ -246,18 +304,10 @@ class Example extends React.Component {
             )}
           </div>
           <div className="nav-bar-content-social">
-            <a>
-              <i className="fa fa-facebook" />
-            </a>
-            <a>
-              <i className="fa fa-instagram" />
-            </a>
-            <a>
-              <i className="fa fa-twitter" />
-            </a>
-            <a>
-              <i className="fa fa-google" />
-            </a>
+            <a><i className="fa fa-facebook" /></a>
+            <a><i className="fa fa-instagram" /></a>
+            <a><i className="fa fa-twitter" /></a>
+            <a><i className="fa fa-google" /></a>
           </div>
           <p className="nav-bar-content-copyright">
             &copy; Mayhem Trivia 2018 -All rights reserved.
@@ -273,6 +323,8 @@ const mapDispatchToProps = (dispatch) => {
     logoutUser: () => dispatch(logoutUser()),
     makeRequest: (path, params) => dispatch(makeRequest(path, params)),
     postRequest: (path, params) => dispatch(postRequest(path, params)),
+    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
+    updateEmailAndSendOtp: (email) => dispatch(updateEmailAndSendOtp(email)),
   };
 };
 

@@ -227,6 +227,19 @@ class ConfirmOtp extends React.Component {
     }
   };
 
+  get email() {
+    return (
+      (this.props.location &&
+        this.props.location.state &&
+        this.props.location.state.email) ||
+      (this.props.auth.data &&
+        this.props.auth.data.account &&
+        this.props.auth.data.account.email) ||
+      (this.props.auth.currentAccount && this.props.auth.currentAccount.email) ||
+      ""
+    );
+  }
+
   verifyOTP = () => {
     if (this.state.otp.some((digit) => digit === "")) {
       this.setState({ error: "Please enter all digits" });
@@ -236,13 +249,13 @@ class ConfirmOtp extends React.Component {
     this.setState({ isVerifying: true, error: "" });
     const enteredOTP = this.state.otp.join("");
     this.props.confirmOtp({
-      email: this.props.auth.data.account.email,
+      email: this.email,
       otp: enteredOTP,
     });
   };
 
   resendOTP = () => {
-    this.props.resendEmailConfirmation(this.props.auth.data.account.email);
+    this.props.resendEmailConfirmation(this.email);
     this.setState(
       {
         otp: new Array(4).fill(""),
@@ -278,6 +291,12 @@ class ConfirmOtp extends React.Component {
       <div style={styles.container}>
         {!this.props.auth.optVerified ? (
           <div>
+            {this.email && (
+              <p style={styles.subtitle}>
+                {"A code was sent to " +
+                  this.email.replace(/^(.{2}).*(@.*)$/, "$1****$2")}
+              </p>
+            )}
             <div style={styles.otpContainer}>
               {this.state.otp.map((digit, index) => (
                 <input
@@ -318,6 +337,21 @@ class ConfirmOtp extends React.Component {
               {this.props.auth.verifyingOTP ? "Verifying..." : "Verify Code"}
             </button>
 
+            <div style={{ textAlign: "center", marginBottom: "12px" }}>
+              <button
+                onClick={() => this.playGame()}
+                style={{
+                  background: "none",
+                  border: "none",
+                  color: "#9ca3af",
+                  cursor: "pointer",
+                  fontSize: "13px",
+                  textDecoration: "underline",
+                }}
+              >
+                Confirm later, play now
+              </button>
+            </div>
             <div style={styles.resendContainer}>
               <span style={styles.resendText}>Didn't receive the code?</span>
               <button

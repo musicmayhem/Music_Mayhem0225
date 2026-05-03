@@ -4,13 +4,17 @@ import { connect } from "react-redux";
 import LoginForm from "./LoginForm";
 import RegistrationForm from "./RegistrationForm";
 import { logInUser, checkUserIsLogin } from "../actions/loginActions";
-import { createGuestUser, resendEmailConfirmation } from "../actions/registrationActions";
+import { createUser, createGuestUser, resendEmailConfirmation } from "../actions/registrationActions";
 import { getGameData } from "../actions/hostGameActions";
 import Swal from "sweetalert2";
 import { makeRequest } from "../actions/gameAction";
 import { GUEST_NAME } from "../constants/playerConstants";
-import Trophy from "../images/Trophy.svg";
-import ConfirmOtp from "./ConfirmOtp";
+
+const maskEmail = (email) => {
+  if (!email) return "";
+  const [local, domain] = email.split("@");
+  return local.slice(0, 2) + "****@" + domain;
+};
 
 class PlayGameAs extends React.Component {
   state = {
@@ -30,10 +34,10 @@ class PlayGameAs extends React.Component {
     });
     this.props.checkUserIsLogin().then((res) => {
       if (res) {
+        const game_code = this.props.match.params.game_code;
         if (localStorage["temp_user"]) {
-          this._showEmailDiv = true;
+          this.props.history.push("/confirm-otp", { gameCode: game_code });
         } else {
-          let game_code = this.props.match.params.game_code;
           this.props.history.push("/player/" + game_code);
         }
       }
@@ -61,7 +65,7 @@ class PlayGameAs extends React.Component {
       });
     }
     if (nextProps.auth && nextProps.auth.data && nextProps.game.game) {
-      let game_code = nextProps.match.params.game_code;
+      const game_code = nextProps.match.params.game_code;
       if (
         nextProps.auth &&
         nextProps.auth.currentAccount &&
@@ -72,9 +76,17 @@ class PlayGameAs extends React.Component {
           nextProps.auth.currentAccount.account.id
       ) {
         this.props.history.push("/config/" + game_code);
+      } else if (localStorage["temp_user"]) {
+        const email =
+          nextProps.auth.data &&
+          nextProps.auth.data.account &&
+          nextProps.auth.data.account.email;
+        this.props.history.push("/confirm-otp", {
+          gameCode: game_code,
+          email: email || null,
+        });
       } else {
-        if (localStorage["temp_user"]) this._showEmailDiv = true;
-        else this.props.history.push("/player/" + game_code);
+        this.props.history.push("/player/" + game_code);
       }
     }
   }
@@ -94,8 +106,6 @@ class PlayGameAs extends React.Component {
     }
   }
 
-  _showEmailDiv = false;
-
   loginValues = (values) => {
     this.props.logInUser(values);
   };
@@ -103,9 +113,9 @@ class PlayGameAs extends React.Component {
   registrationValues = (values) => {
     localStorage["temp_user"] = true;
     values["account"]["password"] = "password";
-    values["game_code"] = this.props.match.params.game_code;
-    values["account"]["name"] = this.props.auth && this.props.auth.name;
-    this.props.createGuestUser(values);
+    values["account"]["password_confirmation"] = "password";
+    values["account"]["name"] = values["account"]["username"];
+    this.props.createUser(values);
   };
 
   joinQuick = () => {
@@ -124,11 +134,7 @@ class PlayGameAs extends React.Component {
       confirmButtonText: "Submit",
       showCancelButton: false,
     })
-      .queue([
-        {
-          title: "Enter your email to confirm",
-        },
-      ])
+      .queue([{ title: "Enter your email to confirm" }])
       .then((result) => {
         if (result.value) {
           this.props.resendEmailConfirmation(result.value[0]);
@@ -136,172 +142,110 @@ class PlayGameAs extends React.Component {
       });
   };
 
-  playGame() {
-    localStorage.removeItem("temp_user");
-    this.props.history.push("/player/" + this.props.match.params.game_code);
-  }
-
   render() {
-    const email =
-      this.props.auth.data &&
-      this.props.auth.data.account &&
-      this.props.auth.data.account.email;
-    const username =
-      this.props.auth.data &&
-      this.props.auth.data.account &&
-      this.props.auth.data.account.username;
-    const name =
-      this.props.auth.data &&
-      this.props.auth.data.account &&
-      this.props.auth.data.account.name;
     return (
       <Container>
         <Row>
           <Col sm="12" md={{ size: 6, offset: 3 }}>
-            {!this._showEmailDiv && (
-              <div className="align-middle py-3">
-                {this.props.auth && this.props.auth.errors && (
-                  <Alert color="danger">{this.props.auth.errors}</Alert>
-                )}
-                <div>
-                  <div className="custom-form">
-                    <legend>SELECT A LOGIN OPTION:</legend>
-                    <FormGroup tag="fieldset">
-                      <div
-                        className="radio-round"
-                        onClick={() => {
-                          this.setState({
-                            playAs: "quick",
-                            quickName: this.props.auth.name || "",
-                            getGuestUsername: !this.props.auth.name,
-                            guestNameGenerated: !!this.props.auth.name,
-                          });
-                        }}
-                      >
-                        <div>{this.state.playAs === "quick" && <div />}</div>
-                        <label>JUST TAKE ME TO THE GAME</label>
-                      </div>
-                      <div
-                        className="radio-round"
-                        onClick={() => {
-                          this.setState({ playAs: "user" });
-                        }}
-                      >
-                        <div>{this.state.playAs === "user" && <div />} </div>
-                        <label>I HAVE AN ACCOUNT</label>
-                      </div>
-                      <div
-                        className="radio-round"
-                        onClick={() => {
-                          this.setState({ playAs: "guest" });
-                        }}
-                      >
-                        <div>{this.state.playAs === "guest" && <div />} </div>
-                        <label>CREATE FREE ACCOUNT</label>
-                      </div>
-                    </FormGroup>
-                    {this.state.playAs === "quick" && (
-                      <div>
-                        <div className="custom-form-field-w-label">
-                          <label style={{ color: "#fff", marginBottom: "0.4rem", display: "block", fontSize: "0.85rem" }}>
-                            DESIRED USERNAME
-                          </label>
-                          <input
-                            type="text"
-                            className="form-control"
-                            value={this.state.quickName}
-                            onChange={(e) => this.setState({ quickName: e.target.value })}
-                            placeholder={this.props.auth.name || "Loading..."}
-                          />
-                        </div>
-                        <button
-                          className="btn mayhem-btn-yellow btn-block"
-                          style={{ marginTop: "1rem", fontWeight: "600" }}
-                          disabled={!this.state.quickName.trim() || this.props.auth.creatingAccount}
-                          onClick={this.joinQuick}
-                        >
-                          {this.props.auth.creatingAccount ? "JOINING..." : "CONTINUE"}
-                        </button>
-                      </div>
-                    )}
-                    {this.state.playAs === "user" && (
-                      <LoginForm
-                        loginValues={this.loginValues}
-                        {...this.props}
-                      />
-                    )}
-                    {this.state.playAs === "guest" && (
-                      <RegistrationForm
-                        getGuestName={(value) =>
-                          this.setState({ getGuestUsername: value })
-                        }
-                        creatGuest={(value, name) =>
-                          this.setState({
-                            creatGuestUser: value,
-                            guestName: name,
-                          })
-                        }
-                        registrationValues={this.registrationValues}
-                        {...this.props}
-                      />
-                    )}
-                  </div>
-                  <div
-                    style={{ margin: "1rem", textAlign: "center" }}
-                    className="mayhem-link-white"
-                  >
-                    <a
+            <div className="align-middle py-3">
+              {this.props.auth && this.props.auth.errors && (
+                <Alert color="danger">{this.props.auth.errors}</Alert>
+              )}
+              <div>
+                <div className="custom-form">
+                  <legend>SELECT A LOGIN OPTION:</legend>
+                  <FormGroup tag="fieldset">
+                    <div
+                      className="radio-round"
                       onClick={() => {
-                        this.confirmEmail();
+                        this.setState({
+                          playAs: "quick",
+                          quickName: this.props.auth.name || "",
+                          getGuestUsername: !this.props.auth.name,
+                          guestNameGenerated: !!this.props.auth.name,
+                        });
                       }}
                     >
-                      Resend Account Confirmation?
-                    </a>
-                  </div>
+                      <div>{this.state.playAs === "quick" && <div />}</div>
+                      <label>JUST TAKE ME TO THE GAME</label>
+                    </div>
+                    <div
+                      className="radio-round"
+                      onClick={() => this.setState({ playAs: "user" })}
+                    >
+                      <div>{this.state.playAs === "user" && <div />}</div>
+                      <label>I HAVE AN ACCOUNT</label>
+                    </div>
+                    <div
+                      className="radio-round"
+                      onClick={() => this.setState({ playAs: "guest" })}
+                    >
+                      <div>{this.state.playAs === "guest" && <div />}</div>
+                      <label>CREATE FREE ACCOUNT</label>
+                    </div>
+                  </FormGroup>
+                  {this.state.playAs === "quick" && (
+                    <div>
+                      <div className="custom-form-field-w-label">
+                        <label
+                          style={{
+                            color: "#fff",
+                            marginBottom: "0.4rem",
+                            display: "block",
+                            fontSize: "0.85rem",
+                          }}
+                        >
+                          DESIRED USERNAME
+                        </label>
+                        <input
+                          type="text"
+                          className="form-control"
+                          value={this.state.quickName}
+                          onChange={(e) =>
+                            this.setState({ quickName: e.target.value })
+                          }
+                          placeholder={this.props.auth.name || "Loading..."}
+                        />
+                      </div>
+                      <button
+                        className="btn mayhem-btn-yellow btn-block"
+                        style={{ marginTop: "1rem", fontWeight: "600" }}
+                        disabled={
+                          !this.state.quickName.trim() ||
+                          this.props.auth.creatingAccount
+                        }
+                        onClick={this.joinQuick}
+                      >
+                        {this.props.auth.creatingAccount
+                          ? "JOINING..."
+                          : "CONTINUE"}
+                      </button>
+                    </div>
+                  )}
+                  {this.state.playAs === "user" && (
+                    <LoginForm loginValues={this.loginValues} {...this.props} />
+                  )}
+                  {this.state.playAs === "guest" && (
+                    <RegistrationForm
+                      getGuestName={(value) =>
+                        this.setState({ getGuestUsername: value })
+                      }
+                      creatGuest={(value, name) =>
+                        this.setState({ creatGuestUser: value, guestName: name })
+                      }
+                      registrationValues={this.registrationValues}
+                      {...this.props}
+                    />
+                  )}
+                </div>
+                <div
+                  style={{ margin: "1rem", textAlign: "center" }}
+                  className="mayhem-link-white"
+                >
+                  <a onClick={this.confirmEmail}>Resend Account Confirmation?</a>
                 </div>
               </div>
-            )}
-            {this._showEmailDiv && (
-              <div style={{ textAlign: "center", padding: "1.2rem" }}>
-                {this.props.auth && this.props.auth.errors && (
-                  <Alert color="danger">{this.props.auth.errors}</Alert>
-                )}
-
-                <p style={{ fontSize: "1.4rem", color: "white" }}>
-                  VERIFY YOUR ACCOUNT
-                </p>
-                <span style={{ left: "1.8rem", position: "absolute" }}>
-                  <img src={Trophy} width=" 75px" />
-                </span>
-                <br />
-                <p
-                  style={{
-                    fontSize: "1rem",
-                    textAlign: "left",
-                    color: "white",
-                    fontWeight: "500",
-                    paddingTop: "4rem",
-                  }}
-                >
-                  We've sent a 4-digit verification code to your email
-                  <b>{email} </b>. Please enter it below to complete your
-                  signup, play as <b> {name} </b>
-                </p>
-                <div style={{ border: "0.5px solid #621f3b" }} />
-                <br />
-                <ConfirmOtp playGame={this.playGame} />
-                <a
-                  style={{
-                    color: "#d2435f",
-                    cursor: "pointer",
-                    fontSize: "15px",
-                  }}
-                  onClick={() => this.playGame()}
-                >
-                  or continue as {username} for now
-                </a>
-              </div>
-            )}
+            </div>
           </Col>
         </Row>
       </Container>
@@ -312,6 +256,7 @@ class PlayGameAs extends React.Component {
 const mapDispatchToProps = (dispatch) => {
   return {
     logInUser: (params) => dispatch(logInUser(params)),
+    createUser: (params) => dispatch(createUser(params)),
     createGuestUser: (params) => dispatch(createGuestUser(params)),
     checkUserIsLogin: (params) => dispatch(checkUserIsLogin(params)),
     getGameData: (params) => dispatch(getGameData(params)),
@@ -320,10 +265,11 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect((state) => {
-  return {
+export default connect(
+  (state) => ({
     auth: state.auth,
     game: state.game,
     initialValues: { account: { login: "", password: "", remember_me: true } },
-  };
-}, mapDispatchToProps)(PlayGameAs);
+  }),
+  mapDispatchToProps
+)(PlayGameAs);

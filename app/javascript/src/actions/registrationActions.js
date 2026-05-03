@@ -55,6 +55,19 @@ export const resendEmailConfirmation = email => {
   }
 }
 
+export const updateEmailAndSendOtp = email => {
+  return dispatch => {
+    axios.defaults.headers.common['X-CSRF-Token'] = document.querySelector('meta[name="csrf-token"]').content
+    return axios
+      .post('/accounts/update_email', { email })
+      .then(response => {
+        axios.defaults.headers.common['X-CSRF-Token'] = response.headers['x-csrf-token']
+        dispatch({ type: RESEND_EMAIL_CONFIRMATION, result: response.data })
+      })
+      .catch(() => {})
+  }
+}
+
 export const createGuestUser = formParams => {
   return dispatch => {
     dispatch(userCreating())

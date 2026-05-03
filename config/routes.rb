@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   devise_scope :account do
     post 'accounts/verify_otp', to: 'registrations#verify_otp'
     post 'accounts/resend_email_confirmation', to: 'registrations#resend_email_confirmation'
+    post 'accounts/update_email', to: 'registrations#update_email'
   end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
