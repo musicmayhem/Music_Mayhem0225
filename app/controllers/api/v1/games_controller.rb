@@ -248,6 +248,10 @@ module Api
             Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
           when 'toggle_reveal'
             Pusher["games_#{@game.id}"].trigger('game_event', type: 'toggle_reveal')
+          when 'show_leaderboard'
+            Pusher["games_#{@game.id}"].trigger('game_event', type: 'show_leaderboard')
+          when 'final_reveal_shown'
+            Pusher["games_#{@game.id}"].trigger('game_event', type: 'final_reveal_shown')
           end
         else
           case params[:game][:status]
@@ -259,6 +263,10 @@ module Api
               Pusher["games_#{@game.id}"].trigger(event_channel, type: 'tile_reveal', data: { visible_title: params[:game][:visible_title], visible_artist: params[:game][:visible_artist] })
             when 'toggle_reveal'
               Pusher["games_#{@game.id}"].trigger('game_event', type: 'toggle_reveal')
+            when 'show_leaderboard'
+              Pusher["games_#{@game.id}"].trigger('game_event', type: 'show_leaderboard')
+            when 'final_reveal_shown'
+              Pusher["games_#{@game.id}"].trigger('game_event', type: 'final_reveal_shown')
           end
         end
       end

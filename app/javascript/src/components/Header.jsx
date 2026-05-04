@@ -8,7 +8,10 @@ import {
   CREATE_GAME_FROM_HEADER,
 } from "../constants/gameConstants";
 import { Link } from "react-router-dom";
-import { resendEmailConfirmation, updateEmailAndSendOtp } from "../actions/registrationActions";
+import {
+  resendEmailConfirmation,
+  updateEmailAndSendOtp,
+} from "../actions/registrationActions";
 import Swal from "sweetalert2";
 
 let gameWindow = null;
@@ -194,7 +197,8 @@ class Example extends React.Component {
     const account = this.props.auth.currentAccount;
     const needsConfirmation =
       account &&
-      (account.email.includes("@fake_account.com") || !!account.confirmation_token);
+      (account.email.includes("@fake_account.com") ||
+        !!account.confirmation_token);
 
     return (
       <div style={{ display: this.state.showHeader ? "" : "none" }}>
@@ -208,33 +212,38 @@ class Example extends React.Component {
             <div className="nav-bar-logo" />
           </Link>
           <div style={{ display: "flex", alignItems: "center" }}>
-            {needsConfirmation && (
-              <span
-                title="Email not confirmed"
-                style={{
-                  width: "10px",
-                  height: "10px",
-                  borderRadius: "50%",
-                  backgroundColor: "#f59e0b",
-                  display: "inline-block",
-                  marginRight: "8px",
-                  cursor: "pointer",
-                  flexShrink: 0,
-                }}
-                onClick={this.handleConfirmEmail}
-              />
-            )}
-            <div
-              onClick={this.handleClick}
-              className={
-                this.state.isOpen
-                  ? "nav-bar-hamburger nav-bar-hamburger__open"
-                  : "nav-bar-hamburger"
-              }
-            >
-              <div />
-              <div />
-              <div />
+            <div className="nav-bar-hamburger-wrap">
+              <div style={{ position: "relative" }}>
+                {needsConfirmation && (
+                  <span
+                    title="Email not confirmed"
+                    style={{
+                      width: "10px",
+                      height: "10px",
+                      borderRadius: "50%",
+                      backgroundColor: "#EA5247",
+                      position: "absolute",
+                      top: "-5px",
+                      right: "-15px",
+                      cursor: "pointer",
+                      zIndex: 1,
+                    }}
+                  />
+                )}
+              </div>
+
+              <div
+                onClick={this.handleClick}
+                className={
+                  this.state.isOpen
+                    ? "nav-bar-hamburger nav-bar-hamburger__open"
+                    : "nav-bar-hamburger"
+                }
+              >
+                <div />
+                <div />
+                <div />
+              </div>
             </div>
           </div>
         </div>
@@ -304,10 +313,18 @@ class Example extends React.Component {
             )}
           </div>
           <div className="nav-bar-content-social">
-            <a><i className="fa fa-facebook" /></a>
-            <a><i className="fa fa-instagram" /></a>
-            <a><i className="fa fa-twitter" /></a>
-            <a><i className="fa fa-google" /></a>
+            <a>
+              <i className="fa fa-facebook" />
+            </a>
+            <a>
+              <i className="fa fa-instagram" />
+            </a>
+            <a>
+              <i className="fa fa-twitter" />
+            </a>
+            <a>
+              <i className="fa fa-google" />
+            </a>
           </div>
           <p className="nav-bar-content-copyright">
             &copy; Mayhem Trivia 2018 -All rights reserved.
@@ -323,7 +340,8 @@ const mapDispatchToProps = (dispatch) => {
     logoutUser: () => dispatch(logoutUser()),
     makeRequest: (path, params) => dispatch(makeRequest(path, params)),
     postRequest: (path, params) => dispatch(postRequest(path, params)),
-    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
+    resendEmailConfirmation: (email) =>
+      dispatch(resendEmailConfirmation(email)),
     updateEmailAndSendOtp: (email) => dispatch(updateEmailAndSendOtp(email)),
   };
 };

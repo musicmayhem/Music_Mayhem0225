@@ -102,6 +102,8 @@ class GameRemote extends React.Component {
     showChatModal: false,
     gamePlayers: null,
     revealPaused: false,
+    leaderboardShownFromPause: false,
+    showLeaderboardButton: false,
   };
 
   UNSAFE_componentWillMount() {
@@ -458,6 +460,8 @@ class GameRemote extends React.Component {
             this._showNextSongs = false;
             this.setState({
               showProgressBar: false,
+              leaderboardShownFromPause: false,
+              showLeaderboardButton: false,
               songDuration: data.data.loaded_song.length_in_seconds
                 ? parseInt(data.data.loaded_song.length_in_seconds) * 1000
                 : null,
@@ -507,6 +511,9 @@ class GameRemote extends React.Component {
             break;
           case "guess_end":
             this.getGameleaderboard();
+            break;
+          case "final_reveal_shown":
+            this.setState({ showLeaderboardButton: true });
             break;
           case "last_10_songs":
             if (data.remaining_song_count == 0)
@@ -1029,6 +1036,29 @@ class GameRemote extends React.Component {
                   </Link>{" "}
                   | Control
                 </h4>
+                {this.state.showLeaderboardButton &&
+                  !this.state.leaderboardShownFromPause && (
+                    <Row center="xs" style={{ marginBottom: "0.5rem" }}>
+                      <Button
+                        className="mayhem-btn-yellow"
+                        onClick={() => {
+                          this.setState({ leaderboardShownFromPause: true });
+                          this.props.dispatch(
+                            postRequest("games/pusher_update", {
+                              values: {
+                                game: {
+                                  code: this.props.match.params.game_code,
+                                  status: "show_leaderboard",
+                                },
+                              },
+                            }),
+                          );
+                        }}
+                      >
+                        SHOW LEADERBOARD
+                      </Button>
+                    </Row>
+                  )}
                 <Row center="xs">
                   <div style={{ display: "flex" }}>
                     <Col xs={6} sm={6} style={{ marginTop: "1rem" }}>

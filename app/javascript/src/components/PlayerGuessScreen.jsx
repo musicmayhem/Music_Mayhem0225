@@ -63,6 +63,8 @@ class UserGuess extends React.Component {
     updateScore: false,
     guessedValue: '',
     typingStartTime: null,
+    isPlaying: false,
+    songStartedAt: null,
   }
 
   UNSAFE_componentWillMount() {
@@ -74,8 +76,25 @@ class UserGuess extends React.Component {
     })
   }
 
+  componentDidMount() {
+    this.audio = new Audio()
+    this.audio.onended = () => this.setState({ isPlaying: false })
+    if (this.props.song_status) {
+      this.setState({ songStartedAt: Date.now() })
+    }
+  }
+
   UNSAFE_componentWillReceiveProps(np) {
     if (!this.props.guessTimerEnd && np.guessTimerEnd) this._timerEnd = true
+
+    if (!this.props.song_status && np.song_status) {
+      if (this.audio) { this.audio.pause(); this.audio.src = '' }
+      this.setState({ songStartedAt: Date.now(), isPlaying: false })
+    }
+    if (this.props.song_status && !np.song_status) {
+      if (this.audio) { this.audio.pause() }
+      this.setState({ isPlaying: false })
+    }
 
     if (np.account.lastPickRedeemed && np.account.lastPickRedeemed == 'Sneak Peek' && this._redeemOnce) {
       this._redeemOnce = false
@@ -97,6 +116,11 @@ class UserGuess extends React.Component {
   }
 
   componentWillUnmount() {
+    if (this.audio) {
+      this.audio.pause()
+      this.audio.src = ''
+      this.audio = null
+    }
     this.props.setRoundTotalScore(this.props.guess.total_score)
   }
 
@@ -320,12 +344,34 @@ class UserGuess extends React.Component {
     this.setState({ guessedValue: value, typingStartTime: this.props.song_status && !this.state.typingStartTime ? new Date().getTime() : this.state.typingStartTime })
   }
 
+  _playPause = () => {
+    const { song } = this.props
+    const { isPlaying, songStartedAt } = this.state
+    if (!song) return
+    const audioUrl = song.public_url || song.direct_url
+    if (!audioUrl) return
+
+    if (isPlaying) {
+      this.audio.pause()
+      this.setState({ isPlaying: false })
+    } else {
+      if (this.audio.src !== audioUrl) this.audio.src = audioUrl
+      if (songStartedAt) {
+        const elapsed = (Date.now() - songStartedAt) / 1000
+        const maxTime = parseFloat(song.length_in_seconds) || Infinity
+        if (elapsed >= maxTime) return
+        this.audio.currentTime = Math.max(0, elapsed)
+      }
+      this.audio.play().then(() => this.setState({ isPlaying: true })).catch(() => {})
+    }
+  }
+
   _redeemOnce = true
   _timerEnd = false
   _animateOnce = false
 
   render() {
-    const { reward, redeemed, guessedValue } = this.state
+    const { reward, redeemed, guessedValue, isPlaying } = this.state
     const { handleSubmit, player_status, current_session, visibleTitle, visibleArtist } = this.props
     const { playerGuessing } = this.props.guess
     const { show_year_hint, show_title_hint, show_artist_hint } = this.props.game
@@ -507,6 +553,29 @@ class UserGuess extends React.Component {
             this.props.pusherCurrentSongCount
           )}
         </Container>
+        {this.props.song_status && this.props.song && (this.props.song.public_url || this.props.song.direct_url) && (
+          <button
+            onClick={this._playPause}
+            style={{
+              position: 'fixed',
+              bottom: '24px',
+              right: '24px',
+              width: '52px',
+              height: '52px',
+              borderRadius: '50%',
+              background: '#ffca27',
+              border: 'none',
+              cursor: 'pointer',
+              zIndex: 1000,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 4px 14px rgba(0,0,0,0.45)',
+            }}
+          >
+            <i className={`fa ${isPlaying ? 'fa-pause' : 'fa-play'}`} style={{ color: '#321b47', fontSize: '20px' }} />
+          </button>
+        )}
       </div>
     )
   }

@@ -233,8 +233,6 @@ module Api
        end
 
        def rewards
-         puts current_account
-         puts "****************"
          return nil unless current_account
 
          spiffs = current_account.spiffs.order_by_redemption

@@ -9,8 +9,7 @@ import Timer from './Timer'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import Modal from 'react-responsive-modal'
-import { POSTING } from '../constants/routeConstants'
-import { deviseRequest } from '../actions/gameAction'
+import { resendEmailConfirmation, updateEmailAndSendOtp } from '../actions/registrationActions'
 import Swal from 'sweetalert2'
 
 class PlayerGameEnd extends React.Component {
@@ -36,13 +35,33 @@ class PlayerGameEnd extends React.Component {
 
   sendConfirmationMail = () => {
     this.setState({ open: false })
-    this.props.dispatch(deviseRequest('/resend_confirmation', { type: POSTING }))
-    Swal.fire({
-      type: 'success',
-      title: 'Please check your email!',
-      showConfirmButton: false,
-      timer: 1500,
-    })
+    const account = this.props.auth && this.props.auth.currentAccount
+    if (!account) return
+
+    const isGuest = account.email && account.email.includes('@fake_account.com')
+
+    if (isGuest) {
+      Swal.fire({
+        title: 'Add your email',
+        input: 'email',
+        inputLabel: 'Enter your email address to receive a confirmation code',
+        inputPlaceholder: 'you@example.com',
+        confirmButtonText: 'Send Code',
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.value) {
+          const email = result.value
+          this.props.updateEmailAndSendOtp(email).then(() => {
+            this.props.history.push('/confirm-otp', { email })
+          })
+        }
+      })
+    } else {
+      const email = account.email
+      this.props.resendEmailConfirmation(email).then(() => {
+        this.props.history.push('/confirm-otp', { email })
+      })
+    }
   }
 
   render() {
@@ -185,7 +204,15 @@ class PlayerGameEnd extends React.Component {
 function mapStateToProps(store) {
   return {
     guess: store.guess,
+    auth: store.auth,
   }
 }
 
-export default connect(mapStateToProps)(PlayerGameEnd)
+const mapDispatchToProps = (dispatch) => {
+  return {
+    resendEmailConfirmation: (email) => dispatch(resendEmailConfirmation(email)),
+    updateEmailAndSendOtp: (email) => dispatch(updateEmailAndSendOtp(email)),
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(PlayerGameEnd)

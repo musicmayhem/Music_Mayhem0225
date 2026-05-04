@@ -46,6 +46,7 @@ class MusicMayhemGame extends React.Component {
     playerNames: null,
     wheelType: null,
     isQA: false,
+    showLeaderboardOverride: false,
   };
 
   UNSAFE_componentWillMount() {
@@ -316,6 +317,7 @@ class MusicMayhemGame extends React.Component {
           case "song_loaded":
             this.setState({
               pusherCurrentSongCount: data.data.song_of_songs_round_count,
+              showLeaderboardOverride: false,
             });
             if (this.props.game.game.open_session) this._openSession = true;
 
@@ -369,6 +371,18 @@ class MusicMayhemGame extends React.Component {
             }
             if (this._campaignUpdated) {
               this.updateAppliance();
+            }
+            if (this.props.game.game && this.props.game.game.pause_game_screen) {
+              this.props.dispatch(
+                postRequest("games/pusher_update", {
+                  values: {
+                    game: {
+                      code: this.props.match.params.game_code,
+                      status: "final_reveal_shown",
+                    },
+                  },
+                }),
+              );
             }
             break;
           case "show_ad_camp":
@@ -610,6 +624,9 @@ class MusicMayhemGame extends React.Component {
           case "guess_end":
             this.setState({ guessActive: false });
             break;
+          case "show_leaderboard":
+            this.setState({ showLeaderboardOverride: true });
+            break;
           case "toggle_reveal":
             this.setState((prev) => ({ revealPaused: !prev.revealPaused }));
             break;
@@ -699,6 +716,7 @@ class MusicMayhemGame extends React.Component {
       wheelType,
       isQA,
       revealPaused,
+      showLeaderboardOverride,
     } = this.state;
     const { game, pusher } = this.props;
     const gameScreenBigConditons =
@@ -794,7 +812,7 @@ class MusicMayhemGame extends React.Component {
             )}
             {beginGame &&
               game.state == "Showing LeaderBoard" &&
-              game.game.show_scoreboard && (
+              (!game.game.pause_game_screen || showLeaderboardOverride) && (
                 <Leaderboard
                   openSession={game.game.open_session}
                   lastSongOfGame={this._lastSongOfGame}
@@ -811,12 +829,12 @@ class MusicMayhemGame extends React.Component {
                   player1={pusher.pusherData.player1}
                   game_code_display={game.game.game_code_display}
                   round_leaderboard={game.game.round_leaderboard}
-                  // player11={pusher.pusherData.player11} /*11th place at song leaderboard*/
                 />
               )}
             {beginGame &&
               game.state == "Showing LeaderBoard" &&
-              !game.game.no_leader_board && (
+              game.game.pause_game_screen &&
+              !showLeaderboardOverride && (
                 <FinalRevealScreen
                   openSession={game.game.open_session}
                   lastSongOfGame={this._lastSongOfGame}
